@@ -1,7 +1,5 @@
 package RhythmWheels;
 
-//package rhythmwheel;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -53,7 +51,8 @@ public class AudioConcat
             audioInputStreamList.add(audioInputStream);
         }
 
-        AudioInputStream audioInputStream = new MixingAudioInputStream(audioFormat, audioInputStreamList);
+        AudioInputStream audioInputStream = new MixingAudioInputStream(audioFormat,
+                                                                       audioInputStreamList);
 
         try
         {
@@ -113,7 +112,8 @@ public class AudioConcat
             audioInputStreamList.add(audioInputStream);
         }
 
-        AudioInputStream audioInputStream = new SequenceAudioInputStream(audioFormat, audioInputStreamList);
+        AudioInputStream audioInputStream = new SequenceAudioInputStream(audioFormat,
+                                                                         audioInputStreamList);
 
         try
         {
@@ -131,10 +131,7 @@ public class AudioConcat
 
 class StreamUtil
 {
-
-    public static byte[] toByteArray(
-            final InputStream input)
-            throws IOException
+    public static byte[] toByteArray(final InputStream input) throws IOException
     {
         int status = 0;
         final int blockSize = 5000;

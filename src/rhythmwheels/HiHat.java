@@ -1,11 +1,8 @@
 package RhythmWheels;
 
-//package rhythmwheel;
-import java.applet.AudioClip;
-import java.awt.*;
+import java.awt.Graphics;
 
-public class HiHat
-        extends Sound
+public class HiHat extends Sound
 {
 
     public HiHat()
@@ -13,6 +10,7 @@ public class HiHat
         super("hihat");
     }
 
+    @Override
     public void paintMe(Graphics g)
     {
         g.translate(p.x, p.y);

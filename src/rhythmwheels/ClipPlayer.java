@@ -1,12 +1,6 @@
 package RhythmWheels;
 
 /*
- *	ClipPlayer.java
- *
- *	This file is part of the Java Sound Examples.
- */
-
-/*
  *  Copyright (c) 1999 - 2001 by Matthias Pfisterer <Matthias.Pfisterer@web.de>
  *
  *
@@ -25,14 +19,24 @@ package RhythmWheels;
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  */
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.Timer;
-import javax.sound.sampled.*;
-import java.io.*;
 
-public class ClipPlayer extends Thread
-        implements LineListener
+/**
+ * This file is part of the Java Sound Examples.
+ */
+public class ClipPlayer extends Thread implements LineListener
 {
 
     private Clip m_clip;
@@ -92,8 +96,7 @@ public class ClipPlayer extends Thread
         }
         else
         {
-            System.out.println(
-                    "ClipPlayer.<init>(): can't get data from input stream.");
+            System.out.println("ClipPlayer.<init>(): can't get data from input stream.");
         }
     }
     AudioInputStream audioInputStream;
@@ -150,6 +153,7 @@ public class ClipPlayer extends Thread
         line.close();
     }
 
+    @Override
     public void run()
     {
         line.start();

@@ -1,12 +1,16 @@
 package RhythmWheels;
 
-//package rhythmwheel;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Vector;
 import javax.swing.JPanel;
-import java.awt.*;
-import javax.swing.border.*;
-import java.awt.geom.*;
-import java.util.*;
-import java.awt.event.*;
 
 public class Wheel extends JPanel implements MouseListener
 {

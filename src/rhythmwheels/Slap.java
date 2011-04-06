@@ -1,12 +1,9 @@
 package RhythmWheels;
 
-//package rhythmwheel;
-import java.applet.AudioClip;
-import java.awt.*;
+import java.awt.Graphics;
 
 public class Slap extends Sound
 {
-
     public Slap()
     {
         super("slap");

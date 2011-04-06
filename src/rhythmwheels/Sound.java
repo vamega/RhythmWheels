@@ -1,15 +1,14 @@
 package RhythmWheels;
 
-//package rhythmwheel;
-import java.awt.*;
-import java.applet.*;
-import javax.swing.*;
-import java.lang.reflect.*;
-import java.awt.geom.*;
-import java.io.File;
+import java.applet.AudioClip;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.geom.Line2D;
 import java.io.Serializable;
 import java.net.URL;
-import java.net.URI;
 import java.io.IOException;
 
 public abstract class Sound implements Cloneable, Serializable

@@ -1,20 +1,21 @@
 package RhythmWheels;
 
 //package rhythmwheel;
-import javax.sound.sampled.AudioSystem;
-import java.awt.*;
-import java.awt.geom.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import java.awt.event.*;
-import java.lang.reflect.*;
-import java.applet.*;
-import java.net.URL;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Vector;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
-public class SoundPanel
-        extends JPanel
-        implements MouseListener
+public class SoundPanel extends JPanel implements MouseListener
 {
 
     public static Color BACKGROUND_COLOR = RhythmWheel.BACKGROUND_COLOR;
@@ -220,7 +221,8 @@ class imagePanel
             g.setColor(Color.cyan);
             if (RhythmWheel.lowRes)
             {
-                g.drawRect((getWidth() - Sound.getWidth()) / 2, 0, (int) (Sound.getWidth() * Sound.scaleFactor),
+                g.drawRect((getWidth() - Sound.getWidth()) / 2, 0,
+                           (int) (Sound.getWidth() * Sound.scaleFactor),
                            (int) (sound.getHeight() * sound.scaleFactor) - 2);
             }
             // g.drawRect(0, 0, Sound.getWidth(), sound.getHeight());
@@ -241,7 +243,8 @@ class imagePanel
             g.setColor(RhythmWheel.BACKGROUND_COLOR);
             if (RhythmWheel.lowRes)
             {
-                g.drawRect((getWidth() - Sound.getWidth()) / 2, 0, (int) (Sound.getWidth() * Sound.scaleFactor),
+                g.drawRect((getWidth() - Sound.getWidth()) / 2, 0,
+                           (int) (Sound.getWidth() * Sound.scaleFactor),
                            (int) (sound.getHeight() * sound.scaleFactor) - 2);
             }
             g.setColor(oldColor);

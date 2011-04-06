@@ -1,16 +1,19 @@
 package RhythmWheels;
 
-//package rhythmwheel;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.applet.*;
-import java.awt.print.*;
-import javax.swing.event.MouseInputAdapter;
-import javax.swing.filechooser.FileView;
-import java.io.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
-import java.net.MalformedURLException;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class RhythmWheel extends JFrame implements ActionListener
 {
@@ -33,7 +36,7 @@ public class RhythmWheel extends JFrame implements ActionListener
             {
                 "1", "2", "3"
             });
-    public static MyGlassPane myGlassPane;
+    public MyGlassPane myGlassPane;
     public static boolean lowRes = false; // Is the screen at 600 x 800 or less?
     public ControlsPanel controlPanel;
     private SoundPanel soundPanel;

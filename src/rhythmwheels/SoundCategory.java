@@ -2,7 +2,6 @@ package RhythmWheels;
 
 public abstract class SoundCategory
 {
-
     Sound[] sounds;
     String[] names;
     String catName;
@@ -12,6 +11,7 @@ public abstract class SoundCategory
     {
     }
 
+    @Override
     public String toString()
     {
         return catName;

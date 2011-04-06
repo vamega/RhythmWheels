@@ -1,8 +1,6 @@
 package RhythmWheels;
 
-//package rhythmwheel;
-import java.applet.AudioClip;
-import java.awt.*;
+import java.awt.Graphics;
 
 public class Heel extends Sound
 {
@@ -12,6 +10,7 @@ public class Heel extends Sound
         super("heel");
     }
 
+    @Override
     public void paintMe(Graphics g)
     {
         g.translate(p.x, p.y);

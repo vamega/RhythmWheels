@@ -1,8 +1,8 @@
 package RhythmWheels;
 
-//package rhythmwheel;
-import java.applet.AudioClip;
-import java.awt.*;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 
 public class Crash extends Sound
 {
@@ -12,6 +12,7 @@ public class Crash extends Sound
         super("crash");
     }
 
+    @Override
     public void paintMe(Graphics g)
     {
         g.translate(p.x, p.y);

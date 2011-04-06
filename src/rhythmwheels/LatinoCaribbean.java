@@ -2,7 +2,6 @@ package RhythmWheels;
 
 public class LatinoCaribbean extends SoundCategory
 {
-
     public LatinoCaribbean()
     {
         catName = "Latino-Caribbean";

@@ -1,12 +1,18 @@
 package RhythmWheels;
 
-//package rhythmwheel;
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.border.*;
-import java.util.*;
-import java.awt.geom.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Vector;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 // Class WheelPanel handles the spinning of the wheel.  Contains a NumberPanel
 public class WheelPanel extends JPanel
@@ -161,7 +167,7 @@ class NumberPanel extends JPanel implements MouseListener
         }
     }
 
-    public void select(int i)
+    private void select(int i)
     {
         // Delelect the old one
         if (i != selected)

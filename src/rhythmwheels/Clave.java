@@ -1,8 +1,6 @@
 package RhythmWheels;
 
-//package rhythmwheel;
-import java.applet.AudioClip;
-import java.awt.*;
+import java.awt.Graphics;
 
 public class Clave extends Sound
 {
@@ -12,6 +10,7 @@ public class Clave extends Sound
         super("clave");
     }
 
+    @Override
     public void paintMe(Graphics g)
     {
         //super.paint(g);
