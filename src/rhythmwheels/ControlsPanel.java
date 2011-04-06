@@ -7,9 +7,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.swing.JButton;
@@ -21,12 +19,10 @@ import javax.swing.JSlider;
 import javax.swing.Timer;
 import java.util.Vector;
 import java.util.GregorianCalendar;
-import java.util.Date;
 import java.util.Calendar;
 
 public class ControlsPanel extends JPanel implements ActionListener
 {
-
     public static final Color BACKGROUND_COLOR = RhythmWheel.BACKGROUND_COLOR;
     public static final Color FOREGROUND_COLOR = RhythmWheel.FOREGROUND_COLOR;
     private JButton playButton = new JButton("Play");
@@ -260,8 +256,6 @@ public class ControlsPanel extends JPanel implements ActionListener
 // This thread calls the createSoundFile function, then hides the dialog box
 class Painter implements ActionListener
 {
-
-    BufferedWriter bw;
     ControlsPanel cp;
     Wheel wheels[];
     long[] soundLength;
@@ -284,22 +278,11 @@ class Painter implements ActionListener
         {
             wheels[i] = panels[i].wheel;
         }
-        if (RhythmWheel.isApplet == false)
-        {
-            try
-            {
-                bw = new BufferedWriter(new FileWriter("log.txt"));
-            }
-            catch (IOException ex)
-            {
-                System.err.println("Wasn't able to open file");
-            }
-        }
     }
 
     public void actionPerformed(ActionEvent evt)
     {
-        calendar.setTime(new Date());
+        calendar = (GregorianCalendar) GregorianCalendar.getInstance();
         long currentTime = 1000 * calendar.get(Calendar.SECOND)
                            + 60000 * calendar.get(Calendar.MINUTE)
                            + calendar.get(Calendar.MILLISECOND);
@@ -326,43 +309,10 @@ class Painter implements ActionListener
         {
             if (timeFromStart < soundLength[i] * wheelIterations[i])
             {
-                if (RhythmWheel.isApplet == false)
-                {
-                    try
-                    {
-                        bw.write("sounds size : " + wheels[i].getSounds().size());
-                        bw.newLine();
-                    }
-                    catch (IOException ex)
-                    {
-                        System.err.println("Not happening dude");
-                    }
-                }
                 someRunning = true;
                 rotationAngle = (2.0 * Math.PI * (double) timeFromStart / (double) soundLength[i]);
 
                 rotationDifference = (rotationAngle - wheels[i].getPreviousRotationAngle());
-
-                if (RhythmWheel.isApplet == false)
-                {
-                    try
-                    {
-                        bw.write("rotation angle : " + (rotationAngle));
-                        bw.newLine();
-                        bw.write("rotation difference : " + rotationDifference);
-                        bw.newLine();
-                        bw.write("previous angle : " + wheels[i].getPreviousRotationAngle());
-                        bw.newLine();
-                        bw.write("rhs : " + (2.0 * Math.PI / wheels[i].getSounds().size()));
-                        bw.newLine();
-                        bw.flush();
-                    }
-                    catch (IOException ex)
-                    {
-                        System.err.println(
-                                "Unable to write to file during operation");
-                    }
-                }
 
                 if (rotationDifference >= (2.0 * Math.PI / wheels[i].getSounds().size()))
                 {
@@ -445,6 +395,7 @@ class ConcatThread
         rhythmWheel = cp.rhythmWheel;
     }
 
+    @Override
     public void run()
     {
         inputStreams = createSoundFile();
