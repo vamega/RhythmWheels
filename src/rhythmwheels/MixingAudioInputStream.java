@@ -1,6 +1,5 @@
 package RhythmWheels;
 
-//package rhythmwheel;
 /*
  *	MixingAudioInputStream.java
  *
@@ -29,9 +28,7 @@ package RhythmWheels;
  *
  */
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.IOException;
-import java.net.URL;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,31 +38,22 @@ import java.util.List;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.LineListener;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.Mixer;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.BooleanControl;
 
 /*
-This is a class of Tritonus. It's not one of the best ideas to use it here.
-However, we really don't want to reimplement its functionality here.
+ This is a class of Tritonus. It's not one of the best ideas to use it here.
+ However, we really don't want to reimplement its functionality here.
  */
 import org.tritonus.share.sampled.TConversionTool;
 
-/**	Mixing of multiple AudioInputStreams to one AudioInputStream.
-This class takes a collection of AudioInputStreams and mixes
-them together. Being a subclass of AudioInputStream itself,
-reading from instances of this class behaves as if the mixdown
-result of the input streams is read.
-
-@author Matthias Pfisterer
+/**
+ * Mixing of multiple AudioInputStreams to one AudioInputStream.
+ * This class takes a collection of AudioInputStreams and mixes
+ * them together. Being a subclass of AudioInputStream itself,
+ * reading from instances of this class behaves as if the mixdown
+ * result of the input streams is read.
+ * @author Matthias Pfisterer
  */
-public class MixingAudioInputStream
-        extends AudioInputStream
+public class MixingAudioInputStream extends AudioInputStream
 {
 
     private static final boolean DEBUG = false;
@@ -139,6 +127,7 @@ public class MixingAudioInputStream
     If at least one of the input streams has length
     <code>AudioInputStream.NOT_SPECIFIED</code>, this value is returned.
      */
+    @Override
     public long getFrameLength()
     {
         long lLengthInFrames = 0;
@@ -159,6 +148,7 @@ public class MixingAudioInputStream
         return lLengthInFrames;
     }
 
+    @Override
     public int read()
             throws IOException
     {
@@ -196,8 +186,8 @@ public class MixingAudioInputStream
         return (byte) nSample;
     }
 
-    public int read(byte[] abData, int nOffset, int nLength)
-            throws IOException
+    @Override
+    public int read(byte[] abData, int nOffset, int nLength) throws IOException
     {
         if (DEBUG)
         {
@@ -350,8 +340,8 @@ public class MixingAudioInputStream
     method always returns the passed value. In other words: the return value
     is useless (better ideas appreciated).
      */
-    public long skip(long lLength)
-            throws IOException
+    @Override
+    public long skip(long lLength) throws IOException
     {
         int nAvailable = 0;
         Iterator streamIterator = m_audioInputStreamList.iterator();
@@ -366,8 +356,8 @@ public class MixingAudioInputStream
     /**
     The minimum of available() of all input stream is calculated and returned.
      */
-    public int available()
-            throws IOException
+    @Override
+    public int available() throws IOException
     {
         int nAvailable = 0;
         Iterator streamIterator = m_audioInputStreamList.iterator();
@@ -379,8 +369,8 @@ public class MixingAudioInputStream
         return nAvailable;
     }
 
-    public void close()
-            throws IOException
+    @Override
+    public void close() throws IOException
     {
         // TODO: should we close all streams in the list?
     }
@@ -388,6 +378,7 @@ public class MixingAudioInputStream
     /**
     Calls mark() on all input streams.
      */
+    @Override
     public void mark(int nReadLimit)
     {
         Iterator streamIterator = m_audioInputStreamList.iterator();
@@ -401,8 +392,8 @@ public class MixingAudioInputStream
     /**
     Calls reset() on all input streams.
      */
-    public void reset()
-            throws IOException
+    @Override
+    public void reset() throws IOException
     {
         Iterator streamIterator = m_audioInputStreamList.iterator();
         while (streamIterator.hasNext())
@@ -415,6 +406,7 @@ public class MixingAudioInputStream
     /**
     returns true if all input stream return true for markSupported().
      */
+    @Override
     public boolean markSupported()
     {
         Iterator streamIterator = m_audioInputStreamList.iterator();

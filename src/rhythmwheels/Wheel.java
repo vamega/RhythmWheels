@@ -80,7 +80,6 @@ public class Wheel extends JPanel implements MouseListener
     public void setRotationAngle(double angle)
     {
         rotationAngle = angle;
-        repaint();
     }
 
     public Vector getSounds()

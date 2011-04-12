@@ -1,9 +1,6 @@
 package RhythmWheels;
 
-//package rhythmwheel;
-import java.awt.*;
-import java.applet.*;
-import java.awt.geom.*;
+import java.awt.Graphics;
 
 public class Rest extends Sound
 {
@@ -14,10 +11,12 @@ public class Rest extends Sound
         volumeLevel = 1;
     }
 
+    @Override
     public void changeVolume()
     {
     }
 
+    @Override
     public void paintMe(Graphics g)
     {
         //super.paint(g);
