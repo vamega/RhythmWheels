@@ -17,6 +17,7 @@ public class MyGlassPane
     imagePanel selectedSound;
     Sound sound;
 
+    @Override
     public void paint(Graphics g)
     {
         if (point != null && sound != null)
@@ -82,6 +83,7 @@ class Listener
         this.soundPanel = sp;
     }
 
+    @Override
     public void mouseMoved(MouseEvent e)
     {
         // If we're not over the sound panel and we're not dragging, disable
@@ -125,6 +127,7 @@ class Listener
 
     }
 
+    @Override
     public void mousePressed(MouseEvent e)
     {
         inDrag = true;
@@ -139,12 +142,14 @@ class Listener
         }
     }
 
+    @Override
     public void mouseDragged(MouseEvent e)
     {
         glassPane.setPoint(e.getPoint());
         glassPane.repaint();
     }
 
+    @Override
     public void mouseReleased(MouseEvent e)
     {
         // if we're not over the sound panel, disable

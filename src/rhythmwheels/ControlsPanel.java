@@ -7,9 +7,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -17,9 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.Timer;
-import java.util.Vector;
-import java.util.GregorianCalendar;
-import java.util.Calendar;
 
 public class ControlsPanel extends JPanel implements ActionListener
 {
@@ -129,7 +124,6 @@ public class ControlsPanel extends JPanel implements ActionListener
         {
             painter = new Painter(this);
             paintTimer = new Timer(1000 / FPS, painter);
-
         }
 
         // ************************ PLAY *****************************
@@ -158,7 +152,7 @@ public class ControlsPanel extends JPanel implements ActionListener
             // If we get to this point the dlg is closed by the concat thread
             painter.reset();
 
-            // Play the mixed clip
+// Play the mixed clip
                /*             if (mixedClip != null) {
             mixedClip.play();
             }
@@ -232,8 +226,7 @@ public class ControlsPanel extends JPanel implements ActionListener
             clip2.loop(5);*/
 
             // Probably not the most efficient way to do this
-            clipPlayer = new ClipPlayer(mixedBytes, paintTimer,
-                                        playIterations);
+            clipPlayer = new ClipPlayer(mixedBytes, paintTimer, playIterations);
             clipPlayer.start();
         }
         else if (evt.getSource() == stopButton)
@@ -252,340 +245,4 @@ public class ControlsPanel extends JPanel implements ActionListener
         }
     }
     static final int FPS = 15; // frames per second
-}
-
-// This thread calls the createSoundFile function, then hides the dialog box
-class Painter implements ActionListener
-{
-    ControlsPanel cp;
-    Wheel wheels[];
-    long[] soundLength;
-    int[] wheelIterations;
-    GregorianCalendar calendar;
-    long lastTimeFromStart = -1;
-    long startTime = -1;
-
-    public Painter(ControlsPanel c)
-    {
-        cp = c;
-        WheelPanel panels[];
-        panels = cp.rhythmWheel.wheelPanels;
-        calendar = new GregorianCalendar();
-        wheels = new Wheel[panels.length];
-        soundLength = new long[panels.length];
-        wheelIterations = new int[panels.length];
-
-        for (int i = 0; i < panels.length; i++)
-        {
-            wheels[i] = panels[i].wheel;
-        }
-    }
-
-    /*
-     * TODO: Remove the repaint call from within setRotationAngle, and make only a single repaint
-     * operation at the end of this method.
-     */
-    /*
-     * TODO: Improve the quality of this documentation
-     * Here we are updating the rotation angle of the wheel, updating the counter of beneath the
-     * wheel, and incrementing the previous rotation angle of the wheel if the new rotation angle
-     * is greater than the next multiple of 2pi/soundlenght
-     */
-    public void actionPerformed(ActionEvent evt)
-    {
-        calendar = (GregorianCalendar) GregorianCalendar.getInstance();
-        long currentTime = 1000 * calendar.get(Calendar.SECOND)
-                           + 60000 * calendar.get(Calendar.MINUTE)
-                           + calendar.get(Calendar.MILLISECOND);
-        if (lastTimeFromStart == -1)
-        {
-            lastTimeFromStart = 0;
-            startTime = currentTime;
-        }
-        long timeFromStart;
-        if (startTime <= currentTime)
-        {
-            timeFromStart = currentTime - startTime;
-        }
-        else
-        {
-            timeFromStart = 3600000 - startTime + currentTime;
-        }
-        lastTimeFromStart = timeFromStart;
-
-        double rotationDifference = 0;
-        double rotationAngle = 0;
-        boolean someRunning = false;
-        for (int i = 0; i < RhythmWheel.NUM_WHEELS; i++)
-        {
-            if (timeFromStart < soundLength[i] * wheelIterations[i])
-            {
-                someRunning = true;
-                /*
-                 * The rotation angle is equivalent to the time that has passed since the last
-                 * time the circle was redrawn, times 2pi divided by the amount of time it takes
-                 * to play a single sound.
-                 */
-                rotationAngle = (2.0 * Math.PI * (double) timeFromStart / (double) soundLength[i]);
-
-                rotationDifference = (rotationAngle - wheels[i].getPreviousRotationAngle());
-
-                if (rotationDifference >= (2.0 * Math.PI / wheels[i].getSounds().size()))
-                {
-                    wheels[i].setSoundsPlayedCounter(
-                            wheels[i].getSoundsPlayedCounter()
-                            + (int) (rotationDifference / (2.0 * Math.PI / wheels[i].getSounds().size())));
-                }
-                wheels[i].setRotationAngle(rotationAngle);
-                wheels[i].repaint();
-            }
-            else
-            {
-                /*
-                 * Only increment the counter if the wheel hasn't already reached the maximum value
-                 * it needs to reach.
-                 */
-                if (wheels[i].getSoundsPlayedCounter() != wheelIterations[i] * wheels[i].getSounds().size())
-                {
-                    wheels[i].setSoundsPlayedCounter(wheels[i].getSoundsPlayedCounter() + 1);
-                    wheels[i].setRotationAngle(0.0);
-                    wheels[i].repaint();
-                }
-            }
-
-            if (rotationDifference >= (2.0 * Math.PI / wheels[i].getSounds().size()))
-            {
-                wheels[i].setPreviousRotationAngle(
-                        wheels[i].getSoundsPlayedCounter() * (2.0 * Math.PI / wheels[i].getSounds().size()));
-            }
-        }
-
-        if (!someRunning)
-        {
-            cp.paintTimer.stop();
-        }
-    }
-
-    public void reset()
-    {
-        lastTimeFromStart = -1;
-        startTime = -1;
-        int numsounds;
-        for (int i = 0; i < RhythmWheel.NUM_WHEELS; i++)
-        {
-            wheelIterations[i] = 0;
-            try
-            {
-                wheelIterations[i] = Integer.parseInt(
-                        cp.rhythmWheel.wheelPanels[i].loopField.getText());
-            }
-            catch (NumberFormatException e)
-            {
-            }
-            if (wheelIterations[i] < 0)
-            {
-                wheelIterations[i] = 0;
-            }
-            numsounds = wheels[i].getSounds().size();
-            soundLength[i] = numsounds
-                             * (Sound.SOUND_LENGTH + Sound.DELAY_LENGTH * cp.slider.getValue());
-            wheels[i].setSoundsPlayedCounter(0);
-            wheels[i].setPreviousRotationAngle(0);
-
-        }
-    }
-} // Class ControlsPanel
-
-// This thread calls the createSoundFile function, then hides the dialog box
-class ConcatThread extends Thread
-{
-
-    static ControlsPanel cp;
-    static RhythmWheel rhythmWheel;
-    static Vector inputStreams;
-    //static Vector oldSoundFiles;
-    byte[] oldbytes;
-
-    public ConcatThread(ControlsPanel c)
-    {
-        cp = c;
-        rhythmWheel = cp.rhythmWheel;
-    }
-
-    @Override
-    public void run()
-    {
-        inputStreams = createSoundFile();
-        //System.err.println("Old soundFiles = " + oldSoundFiles);
-        //System.err.println("New soundFiles = " + soundFiles);
-
-        // if (oldSoundFiles == null || !oldSoundFiles.equals(soundFiles)) {
-        //     System.err.println("Mixing");
-
-        if (inputStreams.size() > 1)
-        {
-            cp.mixedBytes = concatenator.Mix(inputStreams);
-        }
-        else
-        {
-            InputStream is = (InputStream) inputStreams.elementAt(0);
-            try
-            {
-                cp.mixedBytes = new byte[1000000];
-                is.read(cp.mixedBytes);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        //           oldbytes = (byte [])cp.mixedBytes.clone();
-        //}
-          /*else {
-        System.err.println("Sounds are the same");
-        cp.mixedBytes = oldbytes;
-        //System.err.println("OldAfterConcat = soundfiles " +
-        //                   oldAfterConcat);
-        }
-        oldSoundFiles = (Vector) soundFiles.clone();*/
-
-        int count = 0;
-        while (!cp.dlg.isShowing() && count < 10)
-        {
-            try
-            {
-                sleep(100);
-            }
-            catch (Exception e)
-            {
-            }
-            count++;
-        }
-        cp.dlg.setVisible(false);
-    }
-    AudioConcat concatenator = new AudioConcat();
-    static Vector oldBeforeConcat = new Vector(rhythmWheel.MAX_WHEELS); // the sound files for each wheel before concatenation
-    static Vector oldAfterConcat = new Vector(rhythmWheel.MAX_WHEELS);
-
-    // Creates and returns a vector of ByteArrayInputStreams from each wheel
-    public Vector createSoundFile()
-    {
-        Vector inputStreams = new Vector(rhythmWheel.NUM_WHEELS); // the sound file for each wheel after concatenation
-        int sliderVal = cp.slider.getValue();
-        String delayFile = null;
-        if (sliderVal > 0)
-        {
-            delayFile = "sounds/blank" + sliderVal + Sound.EXTENSION;
-        }
-
-        int numNonBlank = 0; // number of blank wheels
-        int nonBlankIndex = -1; // index of last blank wheel (only used if numblank = 1)
-        for (int i = 0; i < rhythmWheel.NUM_WHEELS; i++)
-        {
-            if (!rhythmWheel.wheelPanels[i].wheel.isBlank())
-            {
-                numNonBlank++;
-                nonBlankIndex = i;
-            }
-        }
-        if (numNonBlank == 0)
-        { // They're all blank
-            inputStreams.addElement(createInputStream(0, false, delayFile));
-            cp.playIterations = 1;
-        }
-        else if (numNonBlank == 1)
-        {
-            inputStreams.addElement(createInputStream(nonBlankIndex, false,
-                                                      delayFile));
-            cp.playIterations = rhythmWheel.wheelPanels[nonBlankIndex].getIterations();
-        }
-        else
-        {
-            for (int w = 0; w < rhythmWheel.NUM_WHEELS; w++)
-            {
-                inputStreams.addElement(createInputStream(w, true,
-                                                          delayFile));
-            }
-
-            //}
-            // Use existing file
-            //else {
-            //System.err.println("Using existing file");
-            //     wheelFiles.addElement(oldAfterConcat.elementAt(w));
-            //}
-
-            /*if (oldBeforeConcat.size() > w) {
-            oldBeforeConcat.setElementAt(files, w);
-            oldAfterConcat.setElementAt(wheelFiles.elementAt(w), w);
-            }
-            else {
-            oldBeforeConcat.addElement(files);
-            oldAfterConcat.addElement(wheelFiles.elementAt(w));
-            }*/
-        } // end for
-        return inputStreams;
-    }
-
-    private ByteArrayInputStream createInputStream(int wheelNum,
-                                                   boolean useWheelIter,
-                                                   String delayFile)
-    {
-        Wheel wheel = rhythmWheel.wheelPanels[wheelNum].wheel;
-        Vector wheelSounds = wheel.getSounds();
-        Vector fileNames = new Vector(); // The vector of files created for this wheel
-        int wheelIterations = rhythmWheel.wheelPanels[wheelNum].getIterations();
-        // Make sure it's a valid number of iterations
-        if (wheelIterations < 0)
-        {
-            wheelIterations = 0;
-            rhythmWheel.wheelPanels[wheelNum].loopField.setText("0");
-        }
-        else if (wheelIterations > 100)
-        {
-            rhythmWheel.wheelPanels[wheelNum].loopField.setText("100");
-            wheelIterations = 100;
-        }
-
-        // If 0 iterations, just use a rest
-        if (wheelIterations == 0)
-        {
-            fileNames.addElement(new Rest().strCurrentFileName);
-
-        }
-        if (useWheelIter)
-        {
-            for (int j = 0; j < wheelIterations; j++)
-            {
-                // Add the sounds to the files vector
-                for (int s = 0; s < wheelSounds.size(); s++)
-                {
-                    Sound sound = (Sound) wheelSounds.elementAt(s);
-                    fileNames.addElement(sound.strCurrentFileName);
-
-                    if (delayFile != null)
-                    {
-                        fileNames.addElement(delayFile);
-                    }
-                }
-            }
-        }
-        else
-        {
-            for (int s = 0; s < wheelSounds.size(); s++)
-            {
-                Sound sound = (Sound) wheelSounds.elementAt(s);
-                fileNames.addElement(sound.strCurrentFileName);
-
-                if (delayFile != null)
-                {
-                    fileNames.addElement(delayFile);
-                }
-            }
-
-        }
-
-        // Concatenate the files in the wheel
-        return new ByteArrayInputStream(concatenator.Concat(fileNames));
-
-    }
 }

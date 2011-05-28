@@ -87,6 +87,10 @@ public class Wheel extends JPanel implements MouseListener
         return sounds;
     }
 
+    /**
+     * Checks whether there is any sound in the Wheel.
+     * @return true if the wheel has a sound in it, false if the wheel compromises only of Rests.
+     */
     public boolean isBlank()
     {
         for (int i = 0; i < sounds.size(); i++)

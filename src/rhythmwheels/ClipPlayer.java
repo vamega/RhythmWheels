@@ -99,6 +99,7 @@ public class ClipPlayer extends Thread implements LineListener
             System.out.println("ClipPlayer.<init>(): can't get data from input stream.");
         }
     }
+
     AudioInputStream audioInputStream;
     int nExternalBufferSize = 128000;
     boolean DEBUG = false;
