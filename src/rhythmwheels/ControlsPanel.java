@@ -7,7 +7,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.DefaultBoundedRangeModel;
+import javax.sound.sampled.AudioFormat;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -25,7 +25,8 @@ public class ControlsPanel extends JPanel implements ActionListener
     private JPanel bottom = new JPanel();
     private JPanel sliderPanel = new JPanel();
     private JPanel top, lPanel, rPanel;
-    public JSlider slider = new JSlider(0, 7, 3);
+    //TODO: Create a model for this slider that ensure that 0 is not an acceptable value.
+    public JSlider slider = new JSlider(-4, 1, 0);
     private JLabel slowLabel = new JLabel("Slow");
     private JLabel fastLabel = new JLabel("Fast");
     private ClipPlayer clipPlayer;
@@ -37,6 +38,7 @@ public class ControlsPanel extends JPanel implements ActionListener
     protected Timer paintTimer;
     //public AudioClip mixedClip;
     byte[] mixedBytes;
+    public AudioFormat audioFormat;
 
     public ControlsPanel(RhythmWheel r)
     {
@@ -226,7 +228,7 @@ public class ControlsPanel extends JPanel implements ActionListener
             clip2.loop(5);*/
 
             // Probably not the most efficient way to do this
-            clipPlayer = new ClipPlayer(mixedBytes, paintTimer, playIterations);
+            clipPlayer = new ClipPlayer(mixedBytes, audioFormat, paintTimer, playIterations);
             clipPlayer.start();
         }
         else if (evt.getSource() == stopButton)

@@ -101,22 +101,25 @@ public class ClipPlayer extends Thread implements LineListener
     }
 
     AudioInputStream audioInputStream;
+    AudioFormat audioFormat;
     int nExternalBufferSize = 128000;
     boolean DEBUG = false;
     private boolean ok = true; // ok to keep writing to the data line?
     private int playIterations = 1; // number of times to play data
     private byte[] mybytes; // The data to play
 
-    public ClipPlayer(byte[] bytes, Timer t, int iter)
+    public ClipPlayer(byte[] bytes, AudioFormat audioFormat, Timer t, int iter)
     {
         timer = t;
         mybytes = bytes;
         playIterations = iter;
         ByteArrayInputStream is = new ByteArrayInputStream(bytes);
         audioInputStream = null;
+        this.audioFormat = audioFormat;
+
         try
         {
-            audioInputStream = AudioSystem.getAudioInputStream(is);
+            audioInputStream = new AudioInputStream(is, audioFormat, bytes.length);
         }
         catch (Exception e)
         {
@@ -124,7 +127,7 @@ public class ClipPlayer extends Thread implements LineListener
             //System.exit(1);
         }
 
-        AudioFormat audioFormat = audioInputStream.getFormat();
+//        AudioFormat audioFormat = audioInputStream.getFormat();
         if (DEBUG)
         {
             System.out.println("AudioPlayer.main(): format: " + audioFormat);
@@ -169,7 +172,7 @@ public class ClipPlayer extends Thread implements LineListener
             mybytes = (byte[]) tempBytes.clone();
             try
             {
-                audioInputStream = AudioSystem.getAudioInputStream(new ByteArrayInputStream(mybytes));
+                audioInputStream = new AudioInputStream(new ByteArrayInputStream(mybytes), audioFormat, mybytes.length);
             }
             catch (Exception e)
             {

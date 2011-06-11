@@ -14,6 +14,9 @@ class ConcatThread extends Thread
     static Vector inputStreams;
     //static Vector oldSoundFiles;
     byte[] oldbytes;
+    AudioConcat concatenator = new AudioConcat();
+    static Vector oldBeforeConcat = new Vector(rhythmWheel.MAX_WHEELS); // the sound files for each wheel before concatenation
+    static Vector oldAfterConcat = new Vector(rhythmWheel.MAX_WHEELS);
 
     public ConcatThread(ControlsPanel c)
     {
@@ -31,32 +34,28 @@ class ConcatThread extends Thread
         // if (oldSoundFiles == null || !oldSoundFiles.equals(soundFiles)) {
         //     System.err.println("Mixing");
 
-        if (inputStreams.size() > 1)
-        {
-            cp.mixedBytes = concatenator.Mix(inputStreams);
-        }
-        else
-        {
-            InputStream is = (InputStream) inputStreams.elementAt(0);
-            try
-            {
-                cp.mixedBytes = new byte[1000000];
-                is.read(cp.mixedBytes);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        //           oldbytes = (byte [])cp.mixedBytes.clone();
-        //}
-          /*else {
-        System.err.println("Sounds are the same");
-        cp.mixedBytes = oldbytes;
-        //System.err.println("OldAfterConcat = soundfiles " +
-        //                   oldAfterConcat);
-        }
-        oldSoundFiles = (Vector) soundFiles.clone();*/
+        cp.mixedBytes = concatenator.Mix(inputStreams, cp.slider.getValue());
+        cp.audioFormat = concatenator.audioFormat;
+        
+        //TODO Remove these comments
+//        if (inputStreams.size() > 0)
+//        {
+//            cp.mixedBytes = concatenator.Mix(inputStreams, cp.slider.getValue());
+//            cp.audioFormat = concatenator.audioFormat;
+//        }
+//        else
+//        {
+//            InputStream is = (InputStream) inputStreams.elementAt(0);
+//            try
+//            {
+//                cp.mixedBytes = new byte[1000000];
+//                is.read(cp.mixedBytes);
+//            }
+//            catch (IOException e)
+//            {
+//                e.printStackTrace();
+//            }
+//        }
 
         int count = 0;
         while (!cp.dlg.isShowing() && count < 10)
@@ -72,11 +71,9 @@ class ConcatThread extends Thread
         }
         cp.dlg.setVisible(false);
     }
-    AudioConcat concatenator = new AudioConcat();
-    static Vector oldBeforeConcat = new Vector(rhythmWheel.MAX_WHEELS); // the sound files for each wheel before concatenation
-    static Vector oldAfterConcat = new Vector(rhythmWheel.MAX_WHEELS);
 
     // Creates and returns a vector of ByteArrayInputStreams from each wheel
+    //TODO Possibly remove usage of the blank file here.
     public Vector createSoundFile()
     {
         Vector inputStreams = new Vector(rhythmWheel.NUM_WHEELS); // the sound file for each wheel after concatenation

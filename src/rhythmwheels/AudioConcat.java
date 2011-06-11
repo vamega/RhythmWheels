@@ -15,6 +15,21 @@ import javax.sound.sampled.AudioSystem;
 
 public class AudioConcat
 {
+    /**
+     * Takes an integer representing the playback speed, and returns the factor, that the size
+     * of a byteSteam representing a sound needs to be multiplied with in order to be played back
+     * at that speed.
+     * @param playbackSpeed The integer representing playback speed. This must be in the range
+     *          [-x,-1)U[1,y].
+     * @return A double that can be multiplied by the steam size to get the size the new stream
+     *          needs to be.
+     */
+    private static double transformSpeed(int playbackSpeed)
+    {
+        return playbackSpeed/5;
+    }
+
+    public static AudioFormat audioFormat = null;
 
     public AudioConcat()
     {
@@ -24,10 +39,9 @@ public class AudioConcat
     Given a vector of ByteArrayInputStreams, returns a byte array
     representing the output stream created
      *************************************************************/
-    public static byte[] Mix(Vector inputStreams)
+    public static byte[] Mix(Vector inputStreams, int playbackSpeed)
     {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        AudioFormat audioFormat = null;
         List audioInputStreamList = new ArrayList();
 
         for (int i = 0; i < inputStreams.size(); i++)
@@ -53,6 +67,7 @@ public class AudioConcat
 
         AudioInputStream audioInputStream = new MixingAudioInputStream(audioFormat,
                                                                        audioInputStreamList);
+        int frameSize = audioFormat.getFrameSize();
 
         try
         {
@@ -64,7 +79,34 @@ public class AudioConcat
             e.printStackTrace();
         }
 
-        return bos.toByteArray();
+        byte[] original = bos.toByteArray();
+        int numFrames = original.length/frameSize;
+        byte[] modified;
+
+        if (playbackSpeed < 0)
+        {
+            modified = new byte[(numFrames + numFrames * playbackSpeed / 5) * frameSize];
+            for (int i = 0; i < (original.length / frameSize) + playbackSpeed - 1; i++)
+            {
+                for (int j = 0; j < frameSize; j++)
+                {
+                    modified[(((i * playbackSpeed) / 5) + i) * frameSize + j] = original[i * frameSize + j];
+                }
+            }
+        }
+        else
+        {
+            modified = original;
+            /*
+             * Everything here is handled by the sound concatenation.
+             * This is because we're trying to avoid changing the pitch of the sound when
+             * elongating playback. The method used to shorted the duration above alters the pitch.
+             * If ever that is changed to not alter the pitch, then this code should be suitably
+             * replaced to ease readability of the code.
+             */
+        }
+
+        return modified;
     }// end Mix
 
     // Given a vector of fileNames to concat, returns a byte array representing

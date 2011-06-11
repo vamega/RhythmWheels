@@ -58,6 +58,7 @@ public abstract class Sound implements Cloneable, Serializable
             {
                 u = new URL("file://" + System.getProperty("user.dir") + "/"
                             + strCurrentFileName);
+                System.out.println(u.toString());
                 ac = java.applet.Applet.newAudioClip(u);
             }
         }
