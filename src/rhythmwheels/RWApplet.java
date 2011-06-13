@@ -28,12 +28,6 @@ public class RWApplet extends JApplet implements ActionListener, WindowListener
         getContentPane().add(panel);
     }
 
-    @Override
-    public void start()
-    {
-        rw.start();
-    }
-
     public void actionPerformed(ActionEvent evt)
     {
         if (evt.getSource() == button)

@@ -30,7 +30,7 @@ public class RhythmWheel extends JFrame implements ActionListener
     public static Color FOREGROUND_COLOR = Color.white;
     public static URL docBase;
     public JLabel soundCatLabel;
-    public JPanel top, mid, bottom, wheelLayout, tempBottom;
+    public JPanel top, mid, bottom, wheelContainer, tempBottom;
     private JLabel numWheelsLabel = new JLabel("   Number of Wheels: ");
     private JComboBox numWheelsBox = new JComboBox(new Object[]
             {
@@ -129,9 +129,14 @@ public class RhythmWheel extends JFrame implements ActionListener
         }
 
 
-        // Set the number of wheels to 1.  This changes NUM_WHEELS to 1.
-        // Don't want to start with NUM_WHEELS = 1 because other classes create
-        // arrays of size NUM_WHEELS
+        //FIXME: Change this so that this call is uncessary.
+        //       Rather start with NUM_WHEELS = 1, and MAX_WHEELS =3
+        //       Then make everything use max wheels for the array.
+
+        /* Set the number of wheels to 1.  This changes NUM_WHEELS to 1.
+         * Don't want to start with NUM_WHEELS = 1 because other classes create
+         * arrays of size NUM_WHEELS
+         */
         setNumWheels(1);
 
         tempBottom = new JPanel(new FlowLayout());
@@ -146,54 +151,39 @@ public class RhythmWheel extends JFrame implements ActionListener
         myGlassPane.setVisible(false);
     }
 
-    public void start()
-    {
-        top.remove(categoryBox);
-        categoryBox = new JComboBox(new Object[]
-                {
-                    new LatinoCaribbean(), new HipHop(),
-                    new Rock()
-                });
-        categoryBox.setBackground(BACKGROUND_COLOR);
-        categoryBox.setForeground(FOREGROUND_COLOR);
-        categoryBox.addActionListener(this);
-        top.add(categoryBox);
-        if (lowRes)
-        {
-            Font current = categoryBox.getFont();
-            Font smaller = new Font(current.getName(), Font.PLAIN, current.getSize() - 2);
-            categoryBox.setFont(smaller);
-        }
-    }
-
     public WheelPanel[] getWheelPanels()
     {
         return wheelPanels;
     }
 
-    public void setNumWheels(int i)
+    /**
+     * Changes the number of wheels that are displayed in the user interface.
+     * @param newNumWheels The new number of wheels to be displayed.
+     */
+    public void setNumWheels(int newNumWheels)
     {
-        if (wheelLayout != null)
+        if (wheelContainer != null)
         {
-            bottom.remove(wheelLayout);
+            bottom.remove(wheelContainer);
         }
 
-        wheelLayout = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        wheelLayout.setBackground(BACKGROUND_COLOR);
+        wheelContainer = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        wheelContainer.setBackground(BACKGROUND_COLOR);
 
-        // Layout for 3 Wheels
-        for (int w = 0; w < i; w++)
+        for (int w = 0; w < newNumWheels; w++)
         {
-            wheelLayout.add(wheelPanels[w]);
+            wheelContainer.add(wheelPanels[w]);
         }
 
-        bottom.add(wheelLayout, BorderLayout.CENTER);
+        bottom.add(wheelContainer, BorderLayout.CENTER);
         bottom.revalidate();
-        bottom.repaint();
-        NUM_WHEELS = i;
-        repaint();
+        NUM_WHEELS = newNumWheels;
     }
 
+    /**
+     * Handles the events for the categoryBox and the numWheelsBox.
+     * @param evt An event triggered by either categoryBox or numWheelsBox.
+     */
     public void actionPerformed(ActionEvent evt)
     {
         if (evt.getSource() == categoryBox)

@@ -17,7 +17,6 @@ public class TestingMain
     {
         RhythmWheel rw = new RhythmWheel();
         rw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        rw.start();
         rw.setVisible(true);
     }
 }
