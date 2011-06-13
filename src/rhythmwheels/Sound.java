@@ -33,7 +33,6 @@ public abstract class Sound implements Cloneable, Serializable
     public static String SOUND_DIR = "sounds/";
     public static String EXTENSION = ".au";
     public static double scaleFactor = 1.0; // For low resolution screens
-//     private InputStream is;
 
     public Sound(String fileName)
     {
@@ -46,31 +45,8 @@ public abstract class Sound implements Cloneable, Serializable
     public AudioClip getAudioClip()
     {
         AudioClip ac = null;
-        try
-        {
-            URL u;
-            if (RhythmWheel.isApplet)
-            //u = new URL(RhythmWheel.docBase, strCurrentFileName);
-            {
-                ac = java.applet.Applet.newAudioClip(RhythmWheel.class.getResource(strCurrentFileName));
-            }
-            else
-            {
-                u = new URL("file://" + System.getProperty("user.dir") + "/"
-                            + strCurrentFileName);
-                System.out.println(u.toString());
-                ac = java.applet.Applet.newAudioClip(u);
-            }
-        }
-        catch (java.net.MalformedURLException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
+        URL u;
+        ac = java.applet.Applet.newAudioClip(RhythmWheel.class.getResource(strCurrentFileName));
         return ac;
     }
 
