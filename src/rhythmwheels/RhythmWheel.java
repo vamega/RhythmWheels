@@ -19,6 +19,7 @@ public class RhythmWheel extends JFrame implements ActionListener
 {
 
     public static boolean isApplet = false;
+
     public WheelPanel wheelPanels[];
     /**
      * This is the combo box that determines which set of sounds is played.
@@ -26,18 +27,26 @@ public class RhythmWheel extends JFrame implements ActionListener
     private JComboBox categoryBox;
     public static int NUM_WHEELS = 3;
     public static int MAX_WHEELS = 3;
-    public static Color BACKGROUND_COLOR = Color.darkGray;
-    public static Color FOREGROUND_COLOR = Color.white;
+    public static final Color BACKGROUND_COLOR = Color.darkGray;
+    public static final Color FOREGROUND_COLOR = Color.white;
+    //TODO: Evaluate if this is actually used anywhere.
     public static URL docBase;
-    public JLabel soundCatLabel;
-    public JPanel top, mid, bottom, wheelContainer, tempBottom;
+    private JLabel soundCatLabel;
+    private JPanel top, mid, bottom, wheelContainer, tempBottom;
     private JLabel numWheelsLabel = new JLabel("   Number of Wheels: ");
     private JComboBox numWheelsBox = new JComboBox(new Object[]
             {
                 "1", "2", "3"
             });
     public MyGlassPane myGlassPane;
-    public static boolean lowRes = false; // Is the screen at 600 x 800 or less?
+
+    // TODO: Change this to a non-static private boolean.
+    // And perhaps have the setLowRes perform changes to the UI that are needed on low-res screens.
+    /**
+     * A boolean to represent whether the application is running on a screen which has a resolution
+     * of 800 x 600 or less.
+     */
+    public static boolean lowRes = false;
     public ControlsPanel controlPanel;
     private SoundPanel soundPanel;
 
@@ -181,6 +190,24 @@ public class RhythmWheel extends JFrame implements ActionListener
     }
 
     /**
+     * Checks if the application is running on a low resolution screen. A low resolution screen
+     * is one which has a resolution of 800 x 600 or less.
+     * @return true, if the application is running on a low resolution screen, false otherwise.
+     */
+    public boolean isLowRes()
+    {
+        return lowRes;
+    }
+
+        /**
+     * @param aLowRes the lowRes to set
+     */
+    public void setLowRes(boolean aLowRes)
+    {
+        lowRes = aLowRes;
+    }
+
+    /**
      * Handles the events for the categoryBox and the numWheelsBox.
      * @param evt An event triggered by either categoryBox or numWheelsBox.
      */
@@ -200,7 +227,12 @@ public class RhythmWheel extends JFrame implements ActionListener
         }
     }
 
-    // Sets the background and foreground of a component
+    /**
+     * Sets the background and foreground of a component.
+     * @param c The component to modify.
+     * @param b The new background color for the component.
+     * @param f The new foreground color for the component.
+     */
     public static void changeComponent(Component c, Color b, Color f)
     {
         c.setBackground(b);

@@ -25,7 +25,6 @@ public class ControlsPanel extends JPanel implements ActionListener
     private JPanel bottom = new JPanel();
     private JPanel sliderPanel = new JPanel();
     private JPanel top, lPanel, rPanel;
-    //TODO: Create a model for this slider that ensure that 0 is not an acceptable value.
     public JSlider slider = new JSlider(-4, 1, 0);
     private JLabel slowLabel = new JLabel("Slow");
     private JLabel fastLabel = new JLabel("Fast");
@@ -36,7 +35,7 @@ public class ControlsPanel extends JPanel implements ActionListener
     private Painter painter;
     public int playIterations = 1;
     protected Timer paintTimer;
-    //public AudioClip mixedClip;
+    private Timer playTimer;
     byte[] mixedBytes;
     public AudioFormat audioFormat;
 

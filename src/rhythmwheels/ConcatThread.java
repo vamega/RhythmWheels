@@ -5,7 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
-// This thread calls the createSoundFile function, then hides the dialog box
+/**
+ * This class is responsible for concatenating sounds in the Wheel, and creating an stream that
+ * can be used for playback. Once these operations are complete the Thread in this class closes the
+ * dialog that the ControlPanel set up that
+ * @author madiav
+ */
 class ConcatThread extends Thread
 {
 
@@ -15,7 +20,6 @@ class ConcatThread extends Thread
     //static Vector oldSoundFiles;
     byte[] oldbytes;
     AudioConcat concatenator = new AudioConcat();
-    static Vector oldBeforeConcat = new Vector(rhythmWheel.MAX_WHEELS); // the sound files for each wheel before concatenation
     static Vector oldAfterConcat = new Vector(rhythmWheel.MAX_WHEELS);
 
     public ConcatThread(ControlsPanel c)
@@ -28,36 +32,14 @@ class ConcatThread extends Thread
     public void run()
     {
         inputStreams = createSoundFile();
-        //System.err.println("Old soundFiles = " + oldSoundFiles);
-        //System.err.println("New soundFiles = " + soundFiles);
-
-        // if (oldSoundFiles == null || !oldSoundFiles.equals(soundFiles)) {
-        //     System.err.println("Mixing");
 
         cp.mixedBytes = concatenator.Mix(inputStreams, cp.slider.getValue());
         cp.audioFormat = concatenator.audioFormat;
-        
-        //TODO Remove these comments
-//        if (inputStreams.size() > 0)
-//        {
-//            cp.mixedBytes = concatenator.Mix(inputStreams, cp.slider.getValue());
-//            cp.audioFormat = concatenator.audioFormat;
-//        }
-//        else
-//        {
-//            InputStream is = (InputStream) inputStreams.elementAt(0);
-//            try
-//            {
-//                cp.mixedBytes = new byte[1000000];
-//                is.read(cp.mixedBytes);
-//            }
-//            catch (IOException e)
-//            {
-//                e.printStackTrace();
-//            }
-//        }
 
         int count = 0;
+        /*
+         * TODO: Possibly replace this with a wait/notify system?
+         */
         while (!cp.dlg.isShowing() && count < 10)
         {
             try
@@ -72,8 +54,14 @@ class ConcatThread extends Thread
         cp.dlg.setVisible(false);
     }
 
-    // Creates and returns a vector of ByteArrayInputStreams from each wheel
-    //TODO Possibly remove usage of the blank file here.
+    /*
+     * TODO: Evaluate possibity of replacing this with ArrayList.
+     */
+    /**
+     * Creates ByteArrayInputStreams representing the concatenated sound for each wheel.
+     * @return A Vector of the concatenated ByteArrayInputStreams. The indices of the Vector
+     *         correspond to indices of the wheels.
+     */
     public Vector createSoundFile()
     {
         Vector inputStreams = new Vector(rhythmWheel.NUM_WHEELS); // the sound file for each wheel after concatenation
@@ -112,26 +100,21 @@ class ConcatThread extends Thread
                 inputStreams.addElement(createInputStream(w, true,
                                                           delayFile));
             }
-
-            //}
-            // Use existing file
-            //else {
-            //System.err.println("Using existing file");
-            //     wheelFiles.addElement(oldAfterConcat.elementAt(w));
-            //}
-
-            /*if (oldBeforeConcat.size() > w) {
-            oldBeforeConcat.setElementAt(files, w);
-            oldAfterConcat.setElementAt(wheelFiles.elementAt(w), w);
-            }
-            else {
-            oldBeforeConcat.addElement(files);
-            oldAfterConcat.addElement(wheelFiles.elementAt(w));
-            }*/
-        } // end for
+        }
         return inputStreams;
     }
 
+    /*
+     * TODO: Examine this code throughly and figure out exactly what the purpose of useWheelIter does.
+     * Then fill in the Javadocs.
+     */
+    /**
+     * Creates a ByteArrayInputStream from the sounds placed in a Wheel.
+     * @param wheelNum The wheel index for which to a ByteArrayInputStream is necessary.
+     * @param useWheelIter Need to figure this one out
+     * @param delayFile
+     * @return
+     */
     private ByteArrayInputStream createInputStream(int wheelNum,
                                                    boolean useWheelIter,
                                                    String delayFile)
@@ -187,7 +170,6 @@ class ConcatThread extends Thread
                     fileNames.addElement(delayFile);
                 }
             }
-
         }
 
         // Concatenate the files in the wheel
