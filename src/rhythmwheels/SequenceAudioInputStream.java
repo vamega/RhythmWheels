@@ -1,6 +1,5 @@
 package RhythmWheels;
 
-//package rhythmwheel;
 /*
  *	SequenceAudioInputStream.java
  *
@@ -27,9 +26,7 @@ package RhythmWheels;
  *
  */
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.IOException;
-import java.net.URL;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,27 +36,26 @@ import java.util.List;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.LineListener;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.Mixer;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.BooleanControl;
 
-public class SequenceAudioInputStream
-        extends AudioInputStream
+public class SequenceAudioInputStream extends AudioInputStream
 {
 
     private static final boolean DEBUG = true;
     private List m_audioInputStreamList;
     private int m_nCurrentStream;
+    private ArrayList<Byte> sequencedData;
+    private boolean isSequenced;
+    private int streamOffset;
+    int speed;
 
-    public SequenceAudioInputStream(AudioFormat audioFormat, Collection audioInputStreams)
+    public SequenceAudioInputStream(AudioFormat audioFormat, Collection audioInputStreams, int speed)
     {
         super(new ByteArrayInputStream(new byte[0]), audioFormat, AudioSystem.NOT_SPECIFIED);
         m_audioInputStreamList = new ArrayList(audioInputStreams);
+        sequencedData = new ArrayList<Byte>();
+        isSequenced = false;
+        this.speed = speed < 1 ? speed : 0;
+        streamOffset = 0;
         m_nCurrentStream = 0;
     }
 
@@ -75,13 +71,15 @@ public class SequenceAudioInputStream
         {
             if (DEBUG)
             {
-                System.out.println("SequenceAudioInputStream.addAudioInputStream(): audio formats do not match, trying to convert.");
+                System.out.println(
+                        "SequenceAudioInputStream.addAudioInputStream(): audio formats do not match, trying to convert.");
             }
             AudioInputStream asold = audioStream;
             audioStream = AudioSystem.getAudioInputStream(getFormat(), asold);
             if (audioStream == null)
             {
-                System.out.println("###  SequenceAudioInputStream.addAudioInputStream(): could not convert.");
+                System.out.println(
+                        "###  SequenceAudioInputStream.addAudioInputStream(): could not convert.");
                 return false;
             }
             if (DEBUG)
@@ -97,7 +95,8 @@ public class SequenceAudioInputStream
         }
         if (DEBUG)
         {
-            System.out.println("SequenceAudioInputStream.addAudioInputStream(): enqueued " + audioStream);
+            System.out.println(
+                    "SequenceAudioInputStream.addAudioInputStream(): enqueued " + audioStream);
         }
         return true;
     }
@@ -114,6 +113,7 @@ public class SequenceAudioInputStream
         return bAnotherStreamAvailable;
     }
 
+    @Override
     public long getFrameLength()
     {
         long lLengthInFrames = 0;
@@ -134,109 +134,155 @@ public class SequenceAudioInputStream
         return lLengthInFrames;
     }
 
-    public int read()
-            throws IOException
+    @Override
+    public int read() throws IOException
     {
-        AudioInputStream stream = getCurrentStream();
-        int nByte = stream.read();
-        if (nByte == -1)
+        sequenceData();
+
+        if(streamOffset < sequencedData.size())
         {
-            /*
-            The end of the current stream has been signaled.
-            We try to advance to the next stream.
-             */
-            boolean bAnotherStreamAvailable = advanceStream();
-            if (bAnotherStreamAvailable)
-            {
-                /*
-                There is another stream. We recurse into this method
-                to read from it.
-                 */
-                return read();
-            }
-            else
-            {
-                /*
-                No more data. We signal EOF.
-                 */
-                return -1;
-            }
+            return sequencedData.get(streamOffset++);
         }
         else
         {
-            /*
-            The most common case: We return the byte.
-             */
-            return nByte;
+            return -1;
         }
     }
 
-    public int read(byte[] abData, int nOffset, int nLength)
-            throws IOException
+    @Override
+    public int read(byte[] abData, int nOffset, int nLength) throws IOException
     {
-        AudioInputStream stream = getCurrentStream();
-        int nBytesRead = stream.read(abData, nOffset, nLength);
-        if (nBytesRead == -1)
+        sequenceData();
+
+        int bytesRead = 0;
+        for (int i = 0; i < abData.length && streamOffset < sequencedData.size(); i++, bytesRead++)
         {
-            /*
-            The end of the current stream has been signaled.
-            We try to advance to the next stream.
-             */
-            boolean bAnotherStreamAvailable = advanceStream();
-            if (bAnotherStreamAvailable)
-            {
-                /*
-                There is another stream. We recurse into this method
-                to read from it.
-                 */
-                return read(abData, nOffset, nLength);
-            }
-            else
-            {
-                /*
-                No more data. We signal EOF.
-                 */
-                return -1;
-            }
+            abData[i] = sequencedData.get(streamOffset++);
+        }
+
+        if (bytesRead == 0)
+        {
+            return -1;
         }
         else
         {
-            /*
-            The most common case: We return the length.
-             */
-            return nBytesRead;
+            return bytesRead;
         }
     }
 
-    public long skip(long lLength)
-            throws IOException
+    private void sequenceData() throws IOException
     {
-        throw new IOException("skip() is not implemented in class SequenceInputStream. Mail <Matthias.Pfisterer@web.de> if you need this feature.");
+        if (!isSequenced)
+        {
+            /*
+             * We read data in using a buffer for greater performance.
+             */
+            byte[] abData = new byte[4096];
+
+            /*
+             * The number of bytes that are read into the buffer.
+             */
+            int nBytesRead;
+
+            /*
+             * This loop reads the data from each individual AudioInputStream, and appends the
+             * portion of the data from that stream that needs to be maintained into a list.
+             *
+             * It then advances to the next stream, and repeats the process.
+             *
+             * The portion of the data to be maintained is decided by the speed variable.
+             */
+            do
+            {
+                /*
+                 * The number of bytes that the current stream has.
+                 */
+                int totalBytesRead = 0;
+                AudioInputStream stream = getCurrentStream();
+                /*
+                 * An optimization to avoid unecessary reallocation.
+                 */
+                sequencedData.ensureCapacity(sequencedData.size() + abData.length);
+
+                /*
+                 * Places the content of the stream into the list.
+                 */
+                while ((nBytesRead = stream.read(abData, 0, abData.length)) != -1)
+                {
+                    totalBytesRead += nBytesRead;
+                    for (int i = 0; i < nBytesRead; i++)
+                    {
+                        sequencedData.add(abData[i]);
+                    }
+                }
+
+                /*
+                 * fSize is the frame size of the AudioInputStream.
+                 */
+                long fSize = stream.getFormat().getFrameSize();
+                int numFrames = (int) (totalBytesRead / fSize);
+
+                /*
+                 * The formulat that determines how much of the original stream to keep.
+                 * Calculations are performed on the number of frames, to avoid ending up with
+                 * and array that isn't a integer multiple of the frame size.
+                 */
+                int bytesRequired = (int) ((numFrames + numFrames * speed / 5) * fSize);
+
+                /*
+                 * Calculate the position in the list, after which data need not be maintained.
+                 */
+                int startIndex = sequencedData.size() - (totalBytesRead - bytesRequired);
+
+                /*
+                 * The sublist created is backed by the original list, so when it is cleared, the
+                 * original list has that range of elements removed as well.
+                 *
+                 * This would be the equivalent of calling sequencedData.removeRange(startIndex, endIndex)
+                 * but that method is protected. This calls that method behind the scenes.
+                 */
+                sequencedData.subList(startIndex, sequencedData.size()).clear();
+            }
+            while (advanceStream());
+
+            isSequenced = true;
+        }
     }
 
-    public int available()
-            throws IOException
+    @Override
+    public long skip(long lLength) throws IOException
+    {
+        throw new IOException(
+                "skip() is not implemented in class SequenceInputStream. Mail <Matthias.Pfisterer@web.de> if you need this feature.");
+    }
+
+    @Override
+    public int available() throws IOException
     {
         return getCurrentStream().available();
     }
 
-    public void close()
-            throws IOException
+    @Override
+    public void close() throws IOException
     {
         // TODO: should we close all streams in the list?
     }
 
+    @Override
     public void mark(int nReadLimit)
     {
-        throw new RuntimeException("mark() is not implemented in class SequenceInputStream. Mail <Matthias.Pfisterer@web.de> if you need this feature.");
+        throw new RuntimeException(
+                "mark() is not implemented in class SequenceInputStream. Mail <Matthias.Pfisterer@web.de> if you need this feature.");
     }
 
-    public void reset()
-            throws IOException
+    @Override
+    public void reset() throws IOException
     {
-        throw new IOException("reset() is not implemented in class SequenceInputStream. Mail <Matthias.Pfisterer@web.de> if you need this feature.");
+        throw new IOException(
+                "reset() is not implemented in class SequenceInputStream. Mail <Matthias.Pfisterer@web.de> if you need this feature.");
     }
 
+    @Override
     public boolean markSupported()
     {
         return false;

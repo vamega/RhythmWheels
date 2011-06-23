@@ -1,8 +1,6 @@
 package RhythmWheels;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Vector;
 
 /**
@@ -173,7 +171,7 @@ class ConcatThread extends Thread
         }
 
         // Concatenate the files in the wheel
-        return new ByteArrayInputStream(concatenator.Concat(fileNames));
+        return new ByteArrayInputStream(concatenator.sequence(fileNames, cp.slider.getValue()));
 
     }
 }

@@ -38,6 +38,7 @@ public class ControlsPanel extends JPanel implements ActionListener
     private Timer playTimer;
     byte[] mixedBytes;
     public AudioFormat audioFormat;
+    static final int FPS = 15; // frames per second
 
     public ControlsPanel(RhythmWheel r)
     {
@@ -153,79 +154,6 @@ public class ControlsPanel extends JPanel implements ActionListener
             // If we get to this point the dlg is closed by the concat thread
             painter.reset();
 
-// Play the mixed clip
-               /*             if (mixedClip != null) {
-            mixedClip.play();
-            }
-            try {
-            Thread.sleep(100);
-            }
-            catch (Exception e) {}*/
-
-            // NOTE: THIS WORKS, AND WOULD BE THE BEST WAY TO DO IT,
-            // BUT YOU GET A GLITCH AT THE BEGINNING OF PLAYBACK WHICH I
-            // HAVEN'T BEEN ABLE TO GET RID OF YET
-               /*
-            byte[] bytescopy = (byte[]) mixedBytes.clone();
-            AudioInputStream ais = null;
-            AudioFormat audioFormat = null;
-            try {
-            //audioFormat = AudioSystem.getAudioFileFormat(mixed).getFormat();
-            ais = AudioSystem.getAudioInputStream(
-            new ByteArrayInputStream(mixedBytes));
-            audioFormat = ais.getFormat();
-            }
-            catch (Exception e) {
-            e.printStackTrace();
-            }
-            DataLine.Info info = new DataLine.Info(Clip.class, audioFormat); // format is an AudioFormat object
-            if (!AudioSystem.isLineSupported(info)) {
-            System.err.println("Audio Line not supported!\n");
-            }
-            Clip clip = null;
-            // Obtain and open the line.
-            try {
-            clip = (Clip) AudioSystem.getLine(info);
-            clip.open(ais);
-            }
-            catch (Exception ex) {
-            //ex.printStackTrace();
-            System.err.println(ex.toString());
-            }
-            clip.loop(5);
-            AudioInputStream ais2 = null;
-            AudioFormat audioFormat2 = null;
-            try {
-            Open o = new Open();
-            //audioFormat = AudioSystem.getAudioFileFormat(mixed).getFormat();
-            ais2 = AudioSystem.getAudioInputStream(new File(o.
-            strCurrentFileName));
-            //    new ByteArrayInputStream(bytescopy));
-            audioFormat2 = ais.getFormat();
-            }
-            catch (Exception e) {
-            e.printStackTrace();
-            }
-            DataLine.Info info2 = new DataLine.Info(Clip.class, audioFormat2); // format is an AudioFormat object
-            if (!AudioSystem.isLineSupported(info2)) {
-            System.err.println("Audio Line not supported!\n");
-            }
-            Clip clip2 = null;
-            // Obtain and open the line.
-            try {
-            clip2 = (Clip) AudioSystem.getLine(info2);
-            clip2.open(ais2);
-            }
-            catch (Exception ex) {
-            ex.printStackTrace();
-            //System.err.println(ex.toString());
-            }
-            try {
-            Thread.sleep(100);
-            }
-            catch (Exception e) {}
-            clip2.loop(5);*/
-
             // Probably not the most efficient way to do this
             clipPlayer = new ClipPlayer(mixedBytes, audioFormat, paintTimer, playIterations);
             clipPlayer.start();
@@ -245,5 +173,4 @@ public class ControlsPanel extends JPanel implements ActionListener
             }
         }
     }
-    static final int FPS = 15; // frames per second
 }

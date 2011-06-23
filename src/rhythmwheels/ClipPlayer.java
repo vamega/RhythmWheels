@@ -60,22 +60,13 @@ public class ClipPlayer extends Thread implements LineListener
         if (audioInputStream != null)
         {
             AudioFormat format = audioInputStream.getFormat();
-            //NOTE: Was SourceDataLine.Info
             DataLine.Info info = new DataLine.Info(Clip.class, format,
                                                    AudioSystem.NOT_SPECIFIED);
-            //Mixer.Info [] inf = AudioSystem.getMixerInfo();
-            // SourceDataLine [] lines =  new SourceDataLine[3];
             try
             {
                 m_clip = (Clip) AudioSystem.getLine(info);
                 m_clip.addLineListener(this);
-                //m_clip.open(format, is.toByteArray, 0, is.length);
                 m_clip.open(audioInputStream);
-                // lines[0] = (SourceDataLine)AudioSystem.getLine(info);
-                //lines[1] = (SourceDataLine)AudioSystem.getLine(info);
-
-                // Mixer mixer = AudioSystem.getMixer(inf[0]);
-                // System.err.println("Synch supported " + mixer.isSynchronizationSupported(lines, false));
             }
             catch (LineUnavailableException e)
             {

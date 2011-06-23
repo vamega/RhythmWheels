@@ -15,6 +15,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/*
+ * NOTE: Future me - remove this comment when all the code in this project is well documented and
+ * the code is refactored to have good coding practices.
+ */
 public class RhythmWheel extends JFrame implements ActionListener
 {
 
