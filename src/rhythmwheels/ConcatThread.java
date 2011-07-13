@@ -80,6 +80,10 @@ class ConcatThread extends Thread
                 nonBlankIndex = i;
             }
         }
+
+        /*
+         * TODO: See if this set of conditionals can be collapsed to simplify the code paths.
+         */
         if (numNonBlank == 0)
         { // They're all blank
             inputStreams.addElement(createInputStream(0, false, delayFile));

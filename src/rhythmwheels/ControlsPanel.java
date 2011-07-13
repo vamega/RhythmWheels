@@ -7,25 +7,37 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.Timer;
+import org.jdom.JDOMException;
 
 public class ControlsPanel extends JPanel implements ActionListener
 {
+
     public static final Color BACKGROUND_COLOR = RhythmWheel.BACKGROUND_COLOR;
     public static final Color FOREGROUND_COLOR = RhythmWheel.FOREGROUND_COLOR;
     private JButton playButton = new JButton("Play");
     private JButton stopButton = new JButton("Stop");
+    private JButton loadButton = new JButton("Load Rhythm");
+    private JButton saveButton = new JButton("Save Rhythm");
+    private JFileChooser fileChooser = new JFileChooser();
     private JPanel bottom = new JPanel();
     private JPanel sliderPanel = new JPanel();
     private JPanel top, lPanel, rPanel;
-    public JSlider slider = new JSlider(-4, 1, 0);
+    public JSlider slider = new JSlider(-8, 2, 0);
     private JLabel slowLabel = new JLabel("Slow");
     private JLabel fastLabel = new JLabel("Fast");
     private ClipPlayer clipPlayer;
@@ -35,7 +47,6 @@ public class ControlsPanel extends JPanel implements ActionListener
     private Painter painter;
     public int playIterations = 1;
     protected Timer paintTimer;
-    private Timer playTimer;
     byte[] mixedBytes;
     public AudioFormat audioFormat;
     static final int FPS = 15; // frames per second
@@ -84,6 +95,129 @@ public class ControlsPanel extends JPanel implements ActionListener
         rPanel.setAlignmentY(JPanel.CENTER_ALIGNMENT);
         stopButton.addActionListener(this);
 
+        saveButton.addActionListener(new ActionListener()
+        {
+
+            public void actionPerformed(ActionEvent e)
+            {
+                int returnVal = fileChooser.showSaveDialog(rhythmWheel);
+
+                if (returnVal == JFileChooser.APPROVE_OPTION)
+                {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    Wheel[] wheels = new Wheel[rhythmWheel.getWheelPanels().length];
+
+                    for (int i = 0; i < wheels.length; i++)
+                    {
+                        wheels[i] = rhythmWheel.getWheelPanels()[i].wheel;
+                    }
+                    try
+                    {
+                        RhythmWriter.saveState(wheels, selectedFile);
+                    }
+                    catch (FileNotFoundException ex)
+                    {
+                        /*
+                         * This should never happen, as we should be creating the file if it
+                         * doesn't exist.
+                         */
+                        JOptionPane.showMessageDialog(rhythmWheel, "The file does not exist.",
+                                                      "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                    catch (IOException ex)
+                    {
+                        JOptionPane.showMessageDialog(rhythmWheel, "Unable to write to the file.",
+                                                      "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else if (returnVal == JFileChooser.CANCEL_OPTION)
+                {
+                    return;
+                }
+                /*
+                 * If an error occurs, or the file chooser is dismissed, see
+                 * JFileChooser.ERROR_OPTION
+                 */
+                else
+                {
+                    /*
+                     * TODO:
+                     * Need to check if there is a way to distinguis between the dialog being
+                     * dismissed and an error occuring. If the dialog is dismissed we should not be
+                     * doing anything, but if the dialog generates an error, we should probably
+                     * display an error message.
+                     *
+                     * For now simply assume that it's caused by the dismissal of the dialog.
+                     */
+                    return;
+                }
+            }
+        });
+        loadButton.addActionListener(new ActionListener()
+        {
+
+            public void actionPerformed(ActionEvent e)
+            {
+                int returnVal = fileChooser.showOpenDialog(rhythmWheel);
+
+                if (returnVal == JFileChooser.APPROVE_OPTION)
+                {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    Wheel[] wheels = new Wheel[rhythmWheel.getWheelPanels().length];
+                    for (int i = 0; i < wheels.length; i++)
+                    {
+                        wheels[i] = rhythmWheel.getWheelPanels()[i].wheel;
+                    }
+                    try
+                    {
+                        RhythmWriter.loadState(wheels, selectedFile);
+                    }
+                    catch (JDOMException ex)
+                    {
+                        //TODO: Find a better way of wording this error message
+                        JOptionPane.showMessageDialog(rhythmWheel,
+                                                      "The file is not formatted correctly, or "
+                                                      + "does not represent a Rhythm",
+                                                      "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                    catch (IOException ex)
+                    {
+                        JOptionPane.showMessageDialog(rhythmWheel, "Unable to read the file.",
+                                                      "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                    catch (Exception ex)
+                    {
+                        JOptionPane.showMessageDialog(rhythmWheel,
+                                                      "This file was created by a version of "
+                                                      + "RhythmWheels that this version "
+                                                      + "cannot read.",
+                                                      "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                else if (returnVal == JFileChooser.CANCEL_OPTION)
+                {
+                    return;
+                }
+                /*
+                 * If an error occurs, or the file chooser is dismissed, see
+                 * JFileChooser.ERROR_OPTION
+                 */
+                else
+                {
+                    /*
+                     * TODO:
+                     * Need to check if there is a way to distinguis between the dialog being
+                     * dismissed and an error occuring. If the dialog is dismissed we should not be
+                     * doing anything, but if the dialog generates an error, we should probably
+                     * display an error message.
+                     *
+                     * For now simply assume that it's caused by the dismissal of the dialog.
+                     */
+                    return;
+                }
+            }
+        });
+
         if (RhythmWheel.lowRes)
         {
             Font current = fastLabel.getFont();
@@ -100,8 +234,10 @@ public class ControlsPanel extends JPanel implements ActionListener
             fastLabel.setFont(smaller);
             slowLabel.setFont(smaller);
         }
+        lPanel.add(loadButton, BorderLayout.SOUTH);
         lPanel.add(playButton, BorderLayout.SOUTH);
         rPanel.add(stopButton, BorderLayout.SOUTH);
+        rPanel.add(saveButton, BorderLayout.SOUTH);
         bottom.add(lPanel);
         bottom.add(rPanel);
         add(bottom, BorderLayout.SOUTH);

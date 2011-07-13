@@ -120,6 +120,11 @@ public abstract class Sound implements Cloneable, Serializable
         return h;
     }
 
+    public String getStrFileBaseName()
+    {
+        return strFileBaseName;
+    }
+
     public void paint(Graphics g)
     {
         // Draws the black triangle
