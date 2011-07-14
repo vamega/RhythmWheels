@@ -145,4 +145,4 @@ class Painter implements ActionListener
 
         }
     }
-} // Class ControlsPanel
+}

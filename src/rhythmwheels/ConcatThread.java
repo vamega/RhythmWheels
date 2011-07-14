@@ -1,6 +1,7 @@
 package RhythmWheels;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -122,7 +123,7 @@ class ConcatThread extends Thread
                                                    String delayFile)
     {
         Wheel wheel = rhythmWheel.wheelPanels[wheelNum].wheel;
-        Vector wheelSounds = wheel.getSounds();
+        List<Sound> wheelSounds = wheel.getSounds();
         Vector fileNames = new Vector(); // The vector of files created for this wheel
         int wheelIterations = rhythmWheel.wheelPanels[wheelNum].getIterations();
         // Make sure it's a valid number of iterations
@@ -150,7 +151,7 @@ class ConcatThread extends Thread
                 // Add the sounds to the files vector
                 for (int s = 0; s < wheelSounds.size(); s++)
                 {
-                    Sound sound = (Sound) wheelSounds.elementAt(s);
+                    Sound sound = wheelSounds.get(s);
                     fileNames.addElement(sound.strCurrentFileName);
 
                     if (delayFile != null)
@@ -164,7 +165,7 @@ class ConcatThread extends Thread
         {
             for (int s = 0; s < wheelSounds.size(); s++)
             {
-                Sound sound = (Sound) wheelSounds.elementAt(s);
+                Sound sound = wheelSounds.get(s);
                 fileNames.addElement(sound.strCurrentFileName);
 
                 if (delayFile != null)

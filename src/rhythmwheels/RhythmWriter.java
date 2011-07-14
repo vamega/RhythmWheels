@@ -37,7 +37,7 @@ public class RhythmWriter
         {
             Element currentWheel = new Element("wheel");
             //TODO: Replace this with generics.
-            Vector soundObjects = wheels[i].getSounds();
+            List<Sound> soundObjects = wheels[i].getSounds();
             List<Element> soundElements = new LinkedList<Element>();
 
             for (int j = 0; j < soundObjects.size(); j++)
@@ -64,7 +64,7 @@ public class RhythmWriter
         output.output(data, outStream);
     }
 
-    public static void loadState(Wheel[] wheels, File inputFile) throws JDOMException, IOException, Exception
+    public static void loadState(Wheel[] wheels, File inputFile, RhythmWheel rw) throws JDOMException, IOException, Exception
     {
         SAXBuilder documentBuilder = new SAXBuilder();
         Document data = documentBuilder.build(inputFile);
@@ -82,7 +82,7 @@ public class RhythmWriter
         {
             List<Element> soundElements = currentWheel.getChildren();
             wheels[wheelIndex].setNumSounds(soundElements.size());
-            Vector sounds = wheels[wheelIndex].getSounds();
+            List<Sound> sounds = wheels[wheelIndex].getSounds();
 
             int soundIndex = 0;
             for (Element soundElement : soundElements)
@@ -97,5 +97,7 @@ public class RhythmWriter
             wheels[wheelIndex].repaint();
             ++wheelIndex;
         }
+
+        rw.setNumWheels(wheelElements.size());
     }
 }

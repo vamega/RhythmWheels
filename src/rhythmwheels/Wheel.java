@@ -9,7 +9,8 @@ import java.awt.Polygon;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
 
 public class Wheel extends JPanel implements MouseListener
@@ -17,13 +18,14 @@ public class Wheel extends JPanel implements MouseListener
 
     private int radius; // Radius of the Wheel
     private volatile int soundsPlayedCounter = 0;
-    private Vector sounds;
+    private List<Sound> sounds;
     private double rotationAngle = 0.0;
     private double previousRotationAngle = 0.0;
     double[] scales =
     {
         1, 1, 1, 1, 1, 1, 1, 1, .92, .85, .82, .79, .75, .70, .67, .64
-    }; // by experimentation
+    };
+    // by experimentation
     double[] translators =
     {
         0, 0, 0, 0, 0, 0, 0, 0, 13.5, 27, 33, 39, 48, 62, 70, 79
@@ -47,9 +49,9 @@ public class Wheel extends JPanel implements MouseListener
             setMinimumSize(new Dimension(200, 300));
             setPreferredSize(new Dimension(250, 300));
         }
-        sounds = new Vector();
+        sounds = new ArrayList<Sound>();
         Rest r = new Rest();
-        sounds.addElement(r);
+        sounds.add(r);
     }
 
     public int getSoundsPlayedCounter()
@@ -82,7 +84,7 @@ public class Wheel extends JPanel implements MouseListener
         rotationAngle = angle;
     }
 
-    public Vector getSounds()
+    public List<Sound> getSounds()
     {
         return sounds;
     }
@@ -95,7 +97,7 @@ public class Wheel extends JPanel implements MouseListener
     {
         for (int i = 0; i < sounds.size(); i++)
         {
-            Sound s = (Sound) sounds.elementAt(i);
+            Sound s = sounds.get(i);
             if (!(s instanceof Rest))
             {
                 return false;
@@ -181,7 +183,7 @@ public class Wheel extends JPanel implements MouseListener
         double theta, angle;
         for (int i = 0; i < numsounds; i++)
         {
-            Sound s = (Sound) sounds.elementAt(i);
+            Sound s = sounds.get(i);
             Point soundCenter = new Point();
             theta = i * -2.0 * Math.PI / numsounds - Math.PI / 2.0;
             soundCenter.x = c.x - (int) (Math.cos(theta) * hyp)
@@ -216,12 +218,12 @@ public class Wheel extends JPanel implements MouseListener
         {
             for (int j = oldNum; j < numSounds; j++)
             {
-                sounds.addElement(new Rest());
+                sounds.add(new Rest());
             }
         }
         else
         {
-            sounds.setSize(numSounds);
+            sounds.subList(i, sounds.size()).clear();
         }
         setPoints();
     }
@@ -252,7 +254,7 @@ public class Wheel extends JPanel implements MouseListener
 
         for (int i = 0; i < numsounds; i++)
         {
-            Sound s = (Sound) sounds.elementAt(i);
+            Sound s = sounds.get(i);
             g2.scale(1 / Sound.scaleFactor, 1 / Sound.scaleFactor);
             //g2.drawOval(s.getCenter().x - 10, s.getCenter().y - 10, 25, 25);
             s.paint(g2);
@@ -302,12 +304,13 @@ public class Wheel extends JPanel implements MouseListener
         translatedPt.y = (int) (-translators[soundNum]
                                 + mousePt.y / scales[soundNum]);
         int minIndex = findClosestSound(translatedPt);
-        Sound minSound = (Sound) sounds.elementAt(minIndex);
+        Sound minSound = sounds.get(minIndex);
         double mindist = dist(minSound.getCenter(), translatedPt);
+        
         // Replace it if we're close enough
         if (mindist < Sound.getHeight() / 2)
         {
-            sounds.setElementAt(dropSound, minIndex);
+            sounds.set(minIndex, dropSound);
             setPoints();
             repaint();
         }
@@ -325,7 +328,7 @@ public class Wheel extends JPanel implements MouseListener
     // Returns the INDEX of the sound closest to Point p
     private int findClosestSound(Point p)
     {
-        Sound minSound = (Sound) sounds.elementAt(0);
+        Sound minSound = sounds.get(0);
         double mindist = dist(p, minSound.getCenter());
         double d;
         int minIndex = 0;
@@ -334,7 +337,7 @@ public class Wheel extends JPanel implements MouseListener
         // Find the closest sound
         for (int i = 1; i < numsounds; i++)
         {
-            Sound s = (Sound) sounds.elementAt(i);
+            Sound s = sounds.get(i);
             d = dist(p, s.getCenter());
             if (d < mindist)
             {
@@ -363,7 +366,7 @@ public class Wheel extends JPanel implements MouseListener
         translatedPt.y = (int) (-translators[soundNum]
                                 + mousePt.y / scales[soundNum]);
 
-        Sound closest = (Sound) sounds.elementAt(findClosestSound(translatedPt));
+        Sound closest = sounds.get(findClosestSound(translatedPt));
         if (dist(closest.getCenter(), translatedPt) < Sound.getHeight() / 2)
         {
             closest.changeVolume();

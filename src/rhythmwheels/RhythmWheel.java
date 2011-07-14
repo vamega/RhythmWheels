@@ -203,7 +203,7 @@ public class RhythmWheel extends JFrame implements ActionListener
         return lowRes;
     }
 
-        /**
+     /**
      * @param aLowRes the lowRes to set
      */
     public void setLowRes(boolean aLowRes)

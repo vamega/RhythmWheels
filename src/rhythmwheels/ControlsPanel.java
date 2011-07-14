@@ -170,7 +170,7 @@ public class ControlsPanel extends JPanel implements ActionListener
                     }
                     try
                     {
-                        RhythmWriter.loadState(wheels, selectedFile);
+                        RhythmWriter.loadState(wheels, selectedFile, rhythmWheel);
                     }
                     catch (JDOMException ex)
                     {
