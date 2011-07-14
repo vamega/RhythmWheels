@@ -185,7 +185,16 @@ public class RhythmWheel extends JFrame implements ActionListener
 
         for (int w = 0; w < newNumWheels; w++)
         {
+            if(w >= NUM_WHEELS)
+            {
+                wheelPanels[w].wheel.setNumSounds(1);
+            }
             wheelContainer.add(wheelPanels[w]);
+        }
+        
+        for (int i = newNumWheels; i < wheelPanels.length; i++)
+        {
+            wheelPanels[i].wheel.setNumSounds(0);
         }
 
         bottom.add(wheelContainer, BorderLayout.CENTER);
@@ -241,5 +250,10 @@ public class RhythmWheel extends JFrame implements ActionListener
     {
         c.setBackground(b);
         c.setForeground(f);
+    }
+    
+    public void setDropDownValue(int index)
+    {
+        numWheelsBox.setSelectedIndex(index - 1);
     }
 }

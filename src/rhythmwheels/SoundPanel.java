@@ -184,8 +184,7 @@ public class SoundPanel extends JPanel implements MouseListener
     }
 }
 
-class imagePanel
-        extends JPanel
+class imagePanel extends JPanel
 {
 
     final static BasicStroke mediumStroke = new BasicStroke(2.0f);

@@ -23,12 +23,12 @@ public class Wheel extends JPanel implements MouseListener
     private double previousRotationAngle = 0.0;
     double[] scales =
     {
-        1, 1, 1, 1, 1, 1, 1, 1, .92, .85, .82, .79, .75, .70, .67, .64
+        1, 1, 1, 1, 1, 1, 1, 1, 1, .92, .85, .82, .79, .75, .70, .67, .64
     };
     // by experimentation
     double[] translators =
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 13.5, 27, 33, 39, 48, 62, 70, 79
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 27, 33, 39, 48, 62, 70, 79
     };
 
     public Wheel()
@@ -245,7 +245,7 @@ public class Wheel extends JPanel implements MouseListener
         Point c = new Point(getWidth() / 2, getHeight() / 2);
 
         int numsounds = sounds.size();
-        int soundnum = sounds.size() - 1;
+        int soundnum = sounds.size();
         g2.scale(scales[soundnum], scales[soundnum]);
         g2.translate(translators[soundnum], translators[soundnum]);
 

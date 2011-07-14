@@ -24,7 +24,7 @@ public class RhythmWriter
 {
 
     public static void saveState(Wheel[] wheels, File outputFile) throws FileNotFoundException,
-                                                                               IOException
+                                                                         IOException
     {
         Element rhythm = new Element("rhythm");
         rhythm.setAttribute("format", "1");
@@ -32,8 +32,7 @@ public class RhythmWriter
 
         List<Element> wheelElements = new LinkedList<Element>();
 
-        int i = 0;
-        do
+        for (int i = 0; i < wheels.length; i++)
         {
             Element currentWheel = new Element("wheel");
             //TODO: Replace this with generics.
@@ -54,7 +53,6 @@ public class RhythmWriter
             currentWheel.setContent(soundElements);
             wheelElements.add(currentWheel);
         }
-        while(++i < wheels.length && !wheels[i].isBlank());
 
         rhythm.addContent(wheelElements);
 
@@ -64,23 +62,27 @@ public class RhythmWriter
         output.output(data, outStream);
     }
 
-    public static void loadState(Wheel[] wheels, File inputFile, RhythmWheel rw) throws JDOMException, IOException, Exception
+    public static void loadState(Wheel[] wheels, File inputFile, RhythmWheel rw) throws
+            JDOMException, IOException, Exception
     {
         SAXBuilder documentBuilder = new SAXBuilder();
         Document data = documentBuilder.build(inputFile);
 
-        if(!data.getRootElement().getAttributeValue("format").equals("1"))
+        if (!data.getRootElement().getAttributeValue("format").equals("1"))
         {
             //TODO: Create Exception class for exceptions of this sort.
             throw new Exception("Incorrect Format");
         }
 
         List<Element> wheelElements = data.getRootElement().getChildren();
-
+        rw.setNumWheels(wheelElements.size());
+        rw.setDropDownValue(wheelElements.size());
+        
         int wheelIndex = 0;
         for (Element currentWheel : wheelElements)
         {
             List<Element> soundElements = currentWheel.getChildren();
+            //TODO: Add a clear method, and then clear the sounds.
             wheels[wheelIndex].setNumSounds(soundElements.size());
             List<Sound> sounds = wheels[wheelIndex].getSounds();
 
@@ -93,11 +95,9 @@ public class RhythmWriter
                 Sound reflectedSound = (Sound) soundClass.newInstance();
                 sounds.set(soundIndex++, reflectedSound);
             }
-            wheels[wheelIndex].setNumSounds(soundElements.size());
+            rw.wheelPanels[wheelIndex].numPanel.select(soundElements.size() - 1);
             wheels[wheelIndex].repaint();
             ++wheelIndex;
         }
-
-        rw.setNumWheels(wheelElements.size());
     }
 }

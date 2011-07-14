@@ -167,7 +167,11 @@ class NumberPanel extends JPanel implements MouseListener
         }
     }
 
-    private void select(int i)
+    /**
+     * Note this uses indexing starting at 1.
+     * @param i The number of sounds the wheel should have.
+     */
+    public void select(int i)
     {
         // Delelect the old one
         if (i != selected)
