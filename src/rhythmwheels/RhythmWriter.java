@@ -5,10 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Constructor;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -22,12 +20,16 @@ import org.jdom.output.XMLOutputter;
  */
 public class RhythmWriter
 {
+    
+    public static final String CURRENT_FORMAT = "0.1";
 
-    public static void saveState(Wheel[] wheels, File outputFile) throws FileNotFoundException,
+    public static void saveState(Wheel[] wheels, File outputFile, RhythmWheel rw) throws FileNotFoundException,
                                                                          IOException
     {
         Element rhythm = new Element("rhythm");
-        rhythm.setAttribute("format", "1");
+        rhythm.setAttribute("format", CURRENT_FORMAT);
+        rhythm.setAttribute("speed", Integer.toString(rw.controlPanel.getSpeed()));
+        
         Document data = new Document(rhythm);
 
         List<Element> wheelElements = new LinkedList<Element>();
@@ -35,7 +37,6 @@ public class RhythmWriter
         for (int i = 0; i < wheels.length; i++)
         {
             Element currentWheel = new Element("wheel");
-            //TODO: Replace this with generics.
             List<Sound> soundObjects = wheels[i].getSounds();
             List<Element> soundElements = new LinkedList<Element>();
 
@@ -51,6 +52,7 @@ public class RhythmWriter
             }
 
             currentWheel.setContent(soundElements);
+            currentWheel.setAttribute("iterations", Integer.toString(rw.wheelPanels[i].getIterations()));
             wheelElements.add(currentWheel);
         }
 
@@ -68,7 +70,7 @@ public class RhythmWriter
         SAXBuilder documentBuilder = new SAXBuilder();
         Document data = documentBuilder.build(inputFile);
 
-        if (!data.getRootElement().getAttributeValue("format").equals("1"))
+        if (!data.getRootElement().getAttributeValue("format").equals(CURRENT_FORMAT))
         {
             //TODO: Create Exception class for exceptions of this sort.
             throw new Exception("Incorrect Format");
@@ -99,5 +101,7 @@ public class RhythmWriter
             wheels[wheelIndex].repaint();
             ++wheelIndex;
         }
+        
+        rw.controlPanel.setSpeed(Integer.parseInt(data.getRootElement().getAttributeValue("speed")));
     }
 }

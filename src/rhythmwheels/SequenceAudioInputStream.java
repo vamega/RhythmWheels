@@ -228,7 +228,10 @@ public class SequenceAudioInputStream extends AudioInputStream
                  * Calculations are performed on the number of frames, to avoid ending up with
                  * and array that isn't a integer multiple of the frame size.
                  */
-                int bytesRequired = (int) ((numFrames + numFrames * speed / 10) * fSize);
+                int bytesRequired = (int) ((numFrames
+                                            + numFrames * speed
+                                              / (ControlsPanel.MAX_SPEED - ControlsPanel.MIN_SPEED))
+                                           * fSize);
 
                 /*
                  * Calculate the position in the list, after which data need not be maintained.

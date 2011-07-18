@@ -139,7 +139,7 @@ class Painter implements ActionListener
             }
             numsounds = wheels[i].getSounds().size();
             soundLength[i] = numsounds *
-                    (Sound.SOUND_LENGTH + Sound.SOUND_LENGTH * cp.slider.getValue()/10);
+                    (Sound.SOUND_LENGTH + Sound.SOUND_LENGTH * cp.getSpeed()/(cp.MAX_SPEED - cp.MIN_SPEED));
             wheels[i].setSoundsPlayedCounter(0);
             wheels[i].setPreviousRotationAngle(0);
 

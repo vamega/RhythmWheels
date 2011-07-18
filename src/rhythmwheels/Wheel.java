@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -54,36 +53,67 @@ public class Wheel extends JPanel implements MouseListener
         sounds.add(r);
     }
 
+    /**
+     * Returns the value of the counter denoting the number of sounds in the wheel that have finished
+     * playing.
+     * @return The value of the counter.
+     */
     public int getSoundsPlayedCounter()
     {
         return soundsPlayedCounter;
     }
 
+    /**
+     * Sets the value of the counter denoting the number of sounds in the wheel that have finished
+     * playing.
+     * @param newValue  The new value of the counter.
+     */
     public void setSoundsPlayedCounter(int newValue)
     {
         soundsPlayedCounter = newValue;
     }
 
+    /**
+     * Returns the angle at which the wheel is currently rotated by, in radians.
+     * @return The angle at which the wheel is currently rotated by.
+     */
     public double getRotationAngle()
     {
         return rotationAngle;
     }
 
+    /*
+     * TODO: Document this function, and improve the documentation of setPreviousRotationAngle.
+     */
     public double getPreviousRotationAngle()
     {
         return previousRotationAngle;
     }
 
+    /**
+     * Sets the rotationAngle of the wheel prior to the last increment of the counter.
+     * @param previousRotationAngle The new value for the previousRotationAngle.
+     */
     public void setPreviousRotationAngle(double previousRotationAngle)
     {
         this.previousRotationAngle = previousRotationAngle;
     }
 
+    /**
+     * Sets the angle by which the wheel is rotated from it's normal position.
+     * The wheel is not repainted with a call to this method
+     * @param angle The angle by which the wheel should be rotated, in radians.
+     */
     public void setRotationAngle(double angle)
     {
         rotationAngle = angle;
     }
 
+    /**
+     * Returns a list of all the Sounds in the wheel. Modifications to this list will modify the 
+     * sounds in the Wheel.
+     * @return a List of all the Sounds in the wheel.
+     */
     public List<Sound> getSounds()
     {
         return sounds;
@@ -287,7 +317,7 @@ public class Wheel extends JPanel implements MouseListener
         xpts[1] = xpts[0] - 7;
         xpts[2] = xpts[1];
         g2.fillPolygon(new Polygon(xpts, ypts, 3));
-        if (Toolkit.getDefaultToolkit().getScreenSize().getWidth() < 801)
+        if (RhythmWheel.isLowRes())
         {
             g2.scale(1.0 / .8, 1.0 / .8);
         }
@@ -316,6 +346,10 @@ public class Wheel extends JPanel implements MouseListener
         }
     }
 
+    /*
+     * TODO: try and figure out what exactly this method does, and then decide whether to keep it
+     * around or not. As of now there is no code that calls this method.
+     */
     private Point translatePoint(Point p)
     {
         Point p1 = (Point) p.clone();
@@ -348,7 +382,12 @@ public class Wheel extends JPanel implements MouseListener
         return minIndex;
     }
 
-    // Returns the distance between points p1 and p2
+    /**
+     * Calculates the distance between two points on Cartesian coordinate system.
+     * @param p1 One of the points.
+     * @param p2 The other point.
+     * @return The distance between the two points.
+     */
     private double dist(Point p1, Point p2)
     {
         return Math.sqrt((p1.x - p2.x) * (p1.x - p2.x)

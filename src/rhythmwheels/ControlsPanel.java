@@ -27,6 +27,10 @@ import org.jdom.JDOMException;
 public class ControlsPanel extends JPanel implements ActionListener
 {
 
+    public static final int MIN_SPEED = -8;
+    public static final int MAX_SPEED = 2;
+    public static final int DEFAULT_SPEED = 0;
+    
     public static final Color BACKGROUND_COLOR = RhythmWheel.BACKGROUND_COLOR;
     public static final Color FOREGROUND_COLOR = RhythmWheel.FOREGROUND_COLOR;
     private JButton playButton = new JButton("Play");
@@ -37,7 +41,7 @@ public class ControlsPanel extends JPanel implements ActionListener
     private JPanel bottom = new JPanel();
     private JPanel sliderPanel = new JPanel();
     private JPanel top, lPanel, rPanel;
-    public JSlider slider = new JSlider(-8, 2, 0);
+    public JSlider slider = new JSlider(MIN_SPEED, MAX_SPEED, DEFAULT_SPEED);
     private JLabel slowLabel = new JLabel("Slow");
     private JLabel fastLabel = new JLabel("Fast");
     private ClipPlayer clipPlayer;
@@ -113,7 +117,7 @@ public class ControlsPanel extends JPanel implements ActionListener
                     }
                     try
                     {
-                        RhythmWriter.saveState(wheels, selectedFile);
+                        RhythmWriter.saveState(wheels, selectedFile, rhythmWheel);
                     }
                     catch (FileNotFoundException ex)
                     {
@@ -141,8 +145,7 @@ public class ControlsPanel extends JPanel implements ActionListener
                 else
                 {
                     /*
-                     * TODO:
-                     * Need to check if there is a way to distinguis between the dialog being
+                     * TODO: Need to check if there is a way to distinguis between the dialog being
                      * dismissed and an error occuring. If the dialog is dismissed we should not be
                      * doing anything, but if the dialog generates an error, we should probably
                      * display an error message.
@@ -205,8 +208,7 @@ public class ControlsPanel extends JPanel implements ActionListener
                 else
                 {
                     /*
-                     * TODO:
-                     * Need to check if there is a way to distinguis between the dialog being
+                     * TODO: Need to check if there is a way to distinguis between the dialog being
                      * dismissed and an error occuring. If the dialog is dismissed we should not be
                      * doing anything, but if the dialog generates an error, we should probably
                      * display an error message.
@@ -243,6 +245,11 @@ public class ControlsPanel extends JPanel implements ActionListener
         add(bottom, BorderLayout.SOUTH);
     }
 
+    /**
+     * Sets the background and foreground colors of all components within this class.
+     * @param b The background color the components should have
+     * @param f The foreground color the components should have
+     */
     public void changeColors(Color b, Color f)
     {
         RhythmWheel.changeComponent(sliderPanel, b, f);
@@ -307,6 +314,32 @@ public class ControlsPanel extends JPanel implements ActionListener
                 // We need to stop the wheel from continuing to rotate.
                 paintTimer.stop();
             }
+        }
+    }
+
+    /**
+     * Gets the speed of the Rhythm, as shown in the slider.
+     * @return The speed of the Rhythm.
+     */
+    public int getSpeed()
+    {
+        return slider.getValue();
+    }
+
+    /**
+     * Sets the speed of the Rhythm, as shown in the slider. If the new speed is outside the 
+     * acceptable range of [MIN_SPEED, MAX_SPEED] the speed is set to DEFAULT_SPEED.
+     * @param newSpeed The new speed of the Rhythm.
+     */
+    public void setSpeed(int newSpeed)
+    {
+        if (newSpeed >= MAX_SPEED && newSpeed <= MIN_SPEED)
+        {
+            slider.setValue(newSpeed);
+        }
+        else
+        {
+            slider.setValue(DEFAULT_SPEED);
         }
     }
 }

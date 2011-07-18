@@ -16,12 +16,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /*
+ * Varun Madiath comments
+ * 
  * NOTE: Future me - remove this comment when all the code in this project is well documented and
  * the code is refactored to have good coding practices.
+ * 
+ * If someone else must pick up this code before the above NOTE is removed, I'm terribly sorry.
+ * When I got this, the code was a mess, I've tried to clean it up since. Hopefully you'll be able 
+ * to finish the job, and actually make this something thats easy to modify.
  */
 public class RhythmWheel extends JFrame implements ActionListener
 {
-
     public static boolean isApplet = false;
 
     public WheelPanel wheelPanels[];
@@ -54,6 +59,18 @@ public class RhythmWheel extends JFrame implements ActionListener
     public ControlsPanel controlPanel;
     private SoundPanel soundPanel;
 
+    static
+    {
+        if (Toolkit.getDefaultToolkit().getScreenSize().getWidth() < 801)
+        {
+            lowRes = true;
+        }
+        else
+        {
+            lowRes = false;
+        }
+    }
+    
     public RhythmWheel()
     {
         this(null);
@@ -67,15 +84,13 @@ public class RhythmWheel extends JFrame implements ActionListener
             docBase = docbase;
             isApplet = true;
         }
-        if (Toolkit.getDefaultToolkit().getScreenSize().getWidth() < 801)
+        if (isLowRes())
         {
-            lowRes = true;
             Sound.scaleFactor = 0.8;
             setSize(770, 550);
         }
         else
         {
-            lowRes = false;
             Sound.scaleFactor = 1.0;
             setSize(800, 670);
         }
@@ -207,7 +222,7 @@ public class RhythmWheel extends JFrame implements ActionListener
      * is one which has a resolution of 800 x 600 or less.
      * @return true, if the application is running on a low resolution screen, false otherwise.
      */
-    public boolean isLowRes()
+    public static boolean isLowRes()
     {
         return lowRes;
     }

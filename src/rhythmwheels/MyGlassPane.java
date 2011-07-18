@@ -14,7 +14,7 @@ public class MyGlassPane
 {
 
     Point point;
-    imagePanel selectedSound;
+    ImagePanel selectedSound;
     Sound sound;
 
     @Override
@@ -37,7 +37,7 @@ public class MyGlassPane
         point = p;
     }
 
-    public void setSelectedSound(imagePanel p)
+    public void setSelectedSound(ImagePanel p)
     {
         if (selectedSound != null)
         {
@@ -65,8 +65,7 @@ public class MyGlassPane
     }
 }
 
-class Listener
-        extends MouseInputAdapter
+class Listener extends MouseInputAdapter
 {
 
     Toolkit toolkit;
@@ -96,10 +95,10 @@ class Listener
         Component component = SwingUtilities.getDeepestComponentAt(container,
                                                                    containerPoint.x, containerPoint.y);
 
-        if (component instanceof imagePanel)
+        if (component instanceof ImagePanel)
         {
             overImagePanel = true;
-            imagePanel ip = (imagePanel) component;
+            ImagePanel ip = (ImagePanel) component;
             if (ip != glassPane.selectedSound)
             {
                 glassPane.setSelectedSound(ip);
@@ -133,9 +132,9 @@ class Listener
         inDrag = true;
         Component component = getDeepestComponent(e.getPoint());
 
-        if (component != null && component instanceof imagePanel)
+        if (component != null && component instanceof ImagePanel)
         {
-            imagePanel ip = (imagePanel) component;
+            ImagePanel ip = (ImagePanel) component;
             ip.sound.play();
             glassPane.setPoint(e.getPoint());
             glassPane.repaint();
@@ -156,7 +155,7 @@ class Listener
         inDrag = false;
         boolean overImagePanel = false;
         Component component = getDeepestComponent(e.getPoint());
-        if (component != null && component instanceof imagePanel)
+        if (component != null && component instanceof ImagePanel)
         {
             overImagePanel = true;
         }
