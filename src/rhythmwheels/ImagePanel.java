@@ -1,4 +1,4 @@
-package RhythmWheels;
+package rhythmwheels;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

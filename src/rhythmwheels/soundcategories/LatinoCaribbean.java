@@ -1,4 +1,16 @@
-package RhythmWheels;
+package rhythmwheels.soundcategories;
+
+import rhythmwheels.Clave;
+import rhythmwheels.Heel;
+import rhythmwheels.Maracas;
+import rhythmwheels.Mouth;
+import rhythmwheels.Neck;
+import rhythmwheels.Open;
+import rhythmwheels.Rest;
+import rhythmwheels.Slap;
+import rhythmwheels.Sound;
+import rhythmwheels.Tamborine;
+import rhythmwheels.Tip;
 
 public class LatinoCaribbean extends SoundCategory
 {

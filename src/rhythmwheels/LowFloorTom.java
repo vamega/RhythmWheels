@@ -1,4 +1,4 @@
-package RhythmWheels;
+package rhythmwheels;
 
 import java.awt.Font;
 import java.awt.FontMetrics;

@@ -1,4 +1,4 @@
-package RhythmWheels;
+package rhythmwheels;
 
 /*
  *  Copyright (c) 1999 - 2001 by Matthias Pfisterer <Matthias.Pfisterer@web.de>

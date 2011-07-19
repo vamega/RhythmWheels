@@ -1,4 +1,4 @@
-package RhythmWheels;
+package rhythmwheels;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;

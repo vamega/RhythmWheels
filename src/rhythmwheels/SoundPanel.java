@@ -1,5 +1,6 @@
-package RhythmWheels;
+package rhythmwheels;
 
+import rhythmwheels.soundcategories.SoundCategory;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -39,25 +40,25 @@ public class SoundPanel extends JPanel implements MouseListener
      */
     private void setCategory(SoundCategory soundcat)
     {
-        panels = new ImagePanel[soundcat.numSounds];
-        labels = new JLabel[soundcat.numSounds];
+        panels = new ImagePanel[soundcat.getNumSounds()];
+        labels = new JLabel[soundcat.getNumSounds()];
 
         if (RhythmWheel.lowRes)
         {
-            setLayout(new GridLayout(2, soundcat.numSounds, 2, -10));
+            setLayout(new GridLayout(2, soundcat.getNumSounds(), 2, -10));
         }
         else
         {
-            setLayout(new GridLayout(2, soundcat.numSounds, 3, -5));
+            setLayout(new GridLayout(2, soundcat.getNumSounds(), 3, -5));
         }
-        for (int i = 0; i < soundcat.numSounds; i++)
+        for (int i = 0; i < soundcat.getNumSounds(); i++)
         {
-            panels[i] = new ImagePanel(soundcat.sounds[i]);
+            panels[i] = new ImagePanel(soundcat.getSounds()[i]);
             addPanel(panels[i]);
         }
-        for (int i = 0; i < soundcat.numSounds; i++)
+        for (int i = 0; i < soundcat.getNumSounds(); i++)
         {
-            String soundname = soundcat.names[i];
+            String soundname = soundcat.getNames()[i];
             int firstspace = soundname.indexOf(" ");
             if (firstspace == -1 || RhythmWheel.lowRes)
             {

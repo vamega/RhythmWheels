@@ -1,4 +1,4 @@
-package RhythmWheels;
+package rhythmwheels;
 
 /*
  *	MixingAudioInputStream.java

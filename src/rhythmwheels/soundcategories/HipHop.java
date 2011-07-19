@@ -1,4 +1,15 @@
-package RhythmWheels;
+package rhythmwheels.soundcategories;
+
+import rhythmwheels.BassDrum;
+import rhythmwheels.Clap;
+import rhythmwheels.HiHat;
+import rhythmwheels.Hup;
+import rhythmwheels.Rest;
+import rhythmwheels.Scratch1;
+import rhythmwheels.Scratch2;
+import rhythmwheels.Scratch3;
+import rhythmwheels.Sound;
+import rhythmwheels.Tube;
 
 /**
  * <p>Title: </p>

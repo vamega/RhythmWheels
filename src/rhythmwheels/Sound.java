@@ -1,4 +1,4 @@
-package RhythmWheels;
+package rhythmwheels;
 
 import java.applet.AudioClip;
 import java.awt.BasicStroke;

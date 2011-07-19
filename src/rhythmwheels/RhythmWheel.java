@@ -1,5 +1,9 @@
-package RhythmWheels;
+package rhythmwheels;
 
+import rhythmwheels.soundcategories.SoundCategory;
+import rhythmwheels.soundcategories.HipHop;
+import rhythmwheels.soundcategories.Rock;
+import rhythmwheels.soundcategories.LatinoCaribbean;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;

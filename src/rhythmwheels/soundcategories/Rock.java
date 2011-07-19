@@ -1,4 +1,15 @@
-package RhythmWheels;
+package rhythmwheels.soundcategories;
+
+import rhythmwheels.AcousticBass;
+import rhythmwheels.AcousticSnare;
+import rhythmwheels.Crash;
+import rhythmwheels.ElectricSnare;
+import rhythmwheels.HiHatO;
+import rhythmwheels.LowFloorTom;
+import rhythmwheels.OpenHighConga;
+import rhythmwheels.Rest;
+import rhythmwheels.Sound;
+import rhythmwheels.Splash;
 
 public class Rock extends SoundCategory
 {
