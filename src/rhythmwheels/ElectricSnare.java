@@ -15,7 +15,7 @@ public class ElectricSnare extends Sound
     {
         g.translate(p.x, p.y);
         g.setColor(SOUND_COLOR);
-        g.drawRect(3 * w / 8, h / 4 - 1, w / 4 + 3, w / 4 + 3);
+        g.drawRect(3 * WIDTH / 8, HEIGHT / 4 - 1, WIDTH / 4 + 3, WIDTH / 4 + 3);
         g.translate(-p.x, -p.y);
     }
 }

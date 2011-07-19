@@ -1,6 +1,5 @@
 package RhythmWheels;
 
-//package rhythmwheel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,13 +8,11 @@ import javax.swing.event.MouseInputAdapter;
 /**
  * We have to provide our own glass pane so that it can paint.
  */
-public class MyGlassPane
-        extends JComponent
+public class MyGlassPane extends JComponent
 {
-
-    Point point;
-    ImagePanel selectedSound;
-    Sound sound;
+    private Point point;
+    private ImagePanel selectedSound;
+    private Sound sound;
 
     @Override
     public void paint(Graphics g)
@@ -37,6 +34,29 @@ public class MyGlassPane
         point = p;
     }
 
+    /**
+     * Returns the Point associated with this GlassPane.
+     * @return the Point associated with this GlassPane.
+     */
+    public Point getPoint()
+    {
+        return point;
+    }
+
+    /**
+     * Sets the Sound associated with this GlassPane
+     * @param sound the new Sound to be associated with this GlassPane
+     */
+    public void setSound(Sound sound)
+    {
+        this.sound = sound;
+    }
+
+    public Sound getSound()
+    {
+        return sound;
+    }
+
     public void setSelectedSound(ImagePanel p)
     {
         if (selectedSound != null)
@@ -55,6 +75,11 @@ public class MyGlassPane
         {
             sound = null;
         }
+    }
+
+    public ImagePanel getSelectedSound()
+    {
+        return selectedSound;
     }
 
     public MyGlassPane(Container contentPane, SoundPanel soundPanel)
@@ -99,7 +124,7 @@ class Listener extends MouseInputAdapter
         {
             overImagePanel = true;
             ImagePanel ip = (ImagePanel) component;
-            if (ip != glassPane.selectedSound)
+            if (ip != glassPane.getSelectedSound())
             {
                 glassPane.setSelectedSound(ip);
             }
@@ -118,9 +143,9 @@ class Listener extends MouseInputAdapter
             glassPane.setSelectedSound(null);
             if (!overSoundPanel)
             {
-                glassPane.point = null;
+                glassPane.setPoint(null);
                 glassPane.repaint();
-                glassPane.setVisible(false);
+//                glassPane.setVisible(false);
             }
         }
 
@@ -169,14 +194,14 @@ class Listener extends MouseInputAdapter
             Point containerPoint = SwingUtilities.convertPoint(glassPane,
                                                                e.getPoint(),
                                                                component);
-            w.drop(glassPane.sound,
+            w.drop(glassPane.getSound(),
                    new Point(containerPoint.x, containerPoint.y));
         }
-        glassPane.point = null;
+        glassPane.setPoint(null);
         glassPane.repaint();
-        if (glassPane.selectedSound != null && !overImagePanel)
+        if (glassPane.getSelectedSound() != null && !overImagePanel)
         {
-            glassPane.selectedSound.removehilite();
+            glassPane.getSelectedSound().removehilite();
         }
     }
 

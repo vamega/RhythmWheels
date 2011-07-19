@@ -22,14 +22,18 @@ public abstract class Sound implements Cloneable, Serializable
     public String strCurrentFileName;       // such as clap1
     protected AudioClip audioClip;          // such as clap
     public String strFileBaseName;
-    protected static int w = 50;
-    protected static int h = 50;
-    protected static int MAX_VOLUME = 3;  // Max number of volumes for each sound
-    protected int volumeLevel = 1;        // 1 is default - softest
+    
+    protected static final int WIDTH = 50;
+    protected static final int HEIGHT = 50;
+    
+    // Max number of volumes for each sound
+    public static final int MAX_VOLUME = 3;
+    // 1 is default - softest
+    protected int volumeLevel = 1;
+    
     protected Point p = new Point(0, 0);  // the top left point before rotation
     protected Point cp = new Point(0, 0); // Center point after rotation
     public int MAX_SOUND_SIZE = 100000;
-    private byte[] soundBytes = new byte[MAX_SOUND_SIZE];
     public static String SOUND_DIR = "sounds/";
     public static String EXTENSION = ".au";
     public static double scaleFactor = 1.0; // For low resolution screens
@@ -42,6 +46,10 @@ public abstract class Sound implements Cloneable, Serializable
 
     }
 
+    /**
+     * Returns the AudioClip associated with this Sound object.
+     * @return The AudioClip associated with this Sound object.
+     */
     public AudioClip getAudioClip()
     {
         AudioClip ac = null;
@@ -50,33 +58,67 @@ public abstract class Sound implements Cloneable, Serializable
         return ac;
     }
 
-    // Increments the volume level, or resets to 1
-    public void changeVolume()
+    /**
+     * Increments the volume level. If the volume is currently at the highest supported level, then
+     * the volume is reset to 1.
+     */
+    public void cycleVolume()
     {
-        volumeLevel = (volumeLevel + 1);
-        if (volumeLevel > MAX_VOLUME)
+        if (!setVolume(volumeLevel + 1))
         {
-            volumeLevel = 1;
-        }
-
-        strCurrentFileName = SOUND_DIR + strFileBaseName + volumeLevel + EXTENSION;
-        audioClip = getAudioClip();
-
-        // Change the background color
-        switch (volumeLevel)
-        {
-            case 2:
-                backgroundColor = Color.darkGray.darker().darker().darker();
-                break;
-            case 3:
-                backgroundColor = Color.darkGray.darker();
-                break;
-            default:
-                backgroundColor = Color.black;
+            setVolume(1);
         }
         play();
     }
 
+    /**
+     * Sets the volume of this Sound. If the supplied volume is not in the range of [1, MAX_VOLUME]
+     * then nothing is changed.
+     * @param volume The new volume for the sound
+     * @return true if the volume changed as a result of this call, false otherwise.
+     */
+    public boolean setVolume(int volume)
+    {
+        if (1 <= volume && volume <= MAX_VOLUME)
+        {
+            volumeLevel = volume;
+            strCurrentFileName = SOUND_DIR + strFileBaseName + volumeLevel + EXTENSION;
+            audioClip = getAudioClip();
+
+            // Change the background color
+            switch (volumeLevel)
+            {
+                case 2:
+                    backgroundColor = Color.darkGray.darker().darker().darker();
+                    break;
+                case 3:
+                    backgroundColor = Color.darkGray.darker();
+                    break;
+                default:
+                    backgroundColor = Color.black;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    /**
+     * Returns the volume of this Sound.
+     * @return the volume of this Sound.
+     */
+    public int getVolume()
+    {
+        return volumeLevel;
+    }
+    
+    /*
+     * This method need to be implemented, otherwise it doesn't show up when dragging it off the 
+     * sound panel onto the wheel.
+     */
     public Object clone()
     {
         try
@@ -90,6 +132,9 @@ public abstract class Sound implements Cloneable, Serializable
         }
     }
 
+    /**
+     * Plays the AudioClip associated with this Sound.
+     */
     public void play()
     {
         audioClip.play();
@@ -105,34 +150,55 @@ public abstract class Sound implements Cloneable, Serializable
         cp = point;
     }
 
+    /**
+     * The current center of this sound.
+     * @return The current center of this sound.
+     */
     public Point getCenter()
     {
         return cp;
     }
 
+    /**
+     * Returns the width of Sound graphic.
+     * @return the width of Sound graphic.
+     */
     public static final int getWidth()
     {
-        return w;
+        return WIDTH;
     }
 
+    /**
+     * Returns the width of Sound graphic.
+     * @return the width of Sound graphic.
+     */
     public static final int getHeight()
     {
-        return h;
+        return HEIGHT;
     }
 
+    /**
+     * The filename of the sound associated with this Sound Object.
+     * @return 
+     */
     public String getStrFileBaseName()
     {
         return strFileBaseName;
     }
 
-    public void paint(Graphics g)
+    /**
+     * Draws the Triangle outline for the Sound object, and then calls the paintMe method
+     * to paint the Sound specific graphic.
+     * @param g The graphics object to draw the triangle onto.
+     */
+    public final void paint(Graphics g)
     {
         // Draws the black triangle
         Graphics2D g2 = (Graphics2D) g;
         g2.scale(scaleFactor, scaleFactor);
         Point p1 = new Point(4 + p.x, 4 + p.y);
-        Point p2 = new Point(w - 4 + p.x, 4 + p.y);
-        Point p3 = new Point(w / 2 + p.x, h - 4 + p.y);
+        Point p2 = new Point(WIDTH - 4 + p.x, 4 + p.y);
+        Point p3 = new Point(WIDTH / 2 + p.x, HEIGHT - 4 + p.y);
         int xpts[] = new int[3];
         int ypts[] = new int[3];
         xpts[0] = p1.x;
@@ -156,7 +222,11 @@ public abstract class Sound implements Cloneable, Serializable
 
     }
 
-    // This gets overridden by child classes
+    /**
+     * This method should be overridden by Individual sound subclasses to draw themselves to the 
+     * screen.
+     * @param g The graphics object to draw the representation to.
+     */
     public void paintMe(Graphics g)
     {
     }

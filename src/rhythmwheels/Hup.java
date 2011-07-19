@@ -4,7 +4,6 @@ import java.awt.Graphics;
 
 public class Hup extends Sound
 {
-
     public Hup()
     {
         super("hup");
@@ -16,11 +15,11 @@ public class Hup extends Sound
         g.translate(p.x, p.y);
         g.setColor(SOUND_COLOR);
         // Vertical
-        g.drawLine(3 * w / 8 + 2, h / 4, 3 * w / 8 + 2, h / 2);
-        g.drawLine(5 * w / 8 - 2, h / 4, 5 * w / 8 - 2, h / 2);
+        g.drawLine(3 * WIDTH / 8 + 2, HEIGHT / 4, 3 * WIDTH / 8 + 2, HEIGHT / 2);
+        g.drawLine(5 * WIDTH / 8 - 2, HEIGHT / 4, 5 * WIDTH / 8 - 2, HEIGHT / 2);
 
         // Horizontal
-        g.drawLine(3 * w / 8 + 2, 3 * h / 8, 5 * w / 8 - 2, 3 * h / 8);
+        g.drawLine(3 * WIDTH / 8 + 2, 3 * HEIGHT / 8, 5 * WIDTH / 8 - 2, 3 * HEIGHT / 8);
         g.translate(-p.x, -p.y);
     }
 }

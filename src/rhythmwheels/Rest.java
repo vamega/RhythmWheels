@@ -8,11 +8,10 @@ public class Rest extends Sound
     public Rest()
     {
         super("rest");
-        volumeLevel = 1;
     }
 
     @Override
-    public void changeVolume()
+    public void cycleVolume()
     {
     }
 
@@ -27,7 +26,7 @@ public class Rest extends Sound
         }*/
         g.translate(p.x, p.y);
         g.setColor(SOUND_COLOR);
-        g.drawLine(w / 2 - 5, h / 2 - 2, w / 2 + 5, h / 2 - 2);
+        g.drawLine(WIDTH / 2 - 5, HEIGHT / 2 - 2, WIDTH / 2 + 5, HEIGHT / 2 - 2);
         g.translate(-p.x, -p.y);
         /*if (lowRes)
         {

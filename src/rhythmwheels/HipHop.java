@@ -10,7 +10,6 @@ package RhythmWheels;
  */
 public class HipHop extends SoundCategory
 {
-
     public HipHop()
     {
         numSounds = 9;

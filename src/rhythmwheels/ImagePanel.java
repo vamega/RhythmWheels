@@ -7,9 +7,8 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-class ImagePanel extends JPanel
+public class ImagePanel extends JPanel
 {
-
     final static BasicStroke mediumStroke = new BasicStroke(2.0f);
     private int borderSize = 3;
     int count = 1;
@@ -42,11 +41,10 @@ class ImagePanel extends JPanel
             g.setColor(Color.cyan);
             if (RhythmWheel.lowRes)
             {
-                g.drawRect((getWidth() - Sound.getWidth()) / 2, 0,
-                           (int) (Sound.getWidth() * Sound.scaleFactor),
-                           (int) (sound.getHeight() * sound.scaleFactor) - 2);
+                g.drawRect((getWidth() - sound.getWidth()) / 2, 0,
+                           (int) (sound.getWidth() * Sound.scaleFactor),
+                           (int) (sound.getHeight() * Sound.scaleFactor) - 2);
             }
-            // g.drawRect(0, 0, Sound.getWidth(), sound.getHeight());
             g.setColor(oldColor);
         }
         else
@@ -64,9 +62,9 @@ class ImagePanel extends JPanel
             g.setColor(RhythmWheel.BACKGROUND_COLOR);
             if (RhythmWheel.lowRes)
             {
-                g.drawRect((getWidth() - Sound.getWidth()) / 2, 0,
-                           (int) (Sound.getWidth() * Sound.scaleFactor),
-                           (int) (sound.getHeight() * sound.scaleFactor) - 2);
+                g.drawRect((getWidth() - sound.getWidth()) / 2, 0,
+                           (int) (sound.getWidth() * Sound.scaleFactor),
+                           (int) (sound.getHeight() * Sound.scaleFactor) - 2); 
             }
             g.setColor(oldColor);
         }

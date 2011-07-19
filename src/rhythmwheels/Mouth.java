@@ -15,7 +15,7 @@ public class Mouth extends Sound
     {
         g.translate(p.x, p.y);
         g.setColor(SOUND_COLOR);
-        g.fillOval(7 * w / 16, h / 4 + 4, w / 8 + 1, w / 8 + 1);
+        g.fillOval(7 * WIDTH / 16, HEIGHT / 4 + 4, WIDTH / 8 + 1, WIDTH / 8 + 1);
         g.translate(-p.x, -p.y);
     }
 }

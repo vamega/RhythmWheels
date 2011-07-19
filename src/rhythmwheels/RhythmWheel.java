@@ -176,7 +176,7 @@ public class RhythmWheel extends JFrame implements ActionListener
         // Add the glass pane for dragging
         myGlassPane = new MyGlassPane(cp, soundPanel);
         setGlassPane(myGlassPane);
-        myGlassPane.setVisible(false);
+        myGlassPane.setVisible(true);
     }
 
     public WheelPanel[] getWheelPanels()

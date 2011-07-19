@@ -15,10 +15,10 @@ public class Tamborine extends Sound
     {
         g.translate(p.x, p.y);
         g.setColor(SOUND_COLOR);
-        int cx = 3 * w / 8 - 2;
-        int cy = h / 4 - 2;
-        int cw = w / 4 + 4;
-        int ch = w / 4 + 4;
+        int cx = 3 * WIDTH / 8 - 2;
+        int cy = HEIGHT / 4 - 2;
+        int cw = WIDTH / 4 + 4;
+        int ch = WIDTH / 4 + 4;
         g.drawOval(cx, cy, cw, ch);
         // top circle
         g.fillOval(cx + cw / 2 - 3, cy - 4, 7, 7);

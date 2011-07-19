@@ -137,6 +137,9 @@ public class Wheel extends JPanel implements MouseListener
     }
 
     // Sets the center of the points based on the number of sounds.
+    /**
+     * Sets the center of the points based on the number of sounds.
+     */
     public void setPoints()
     {
         Point c = new Point(getWidth() / 2 - Sound.getWidth() / 2,
@@ -257,12 +260,17 @@ public class Wheel extends JPanel implements MouseListener
         }
         setPoints();
     }
+    
     boolean first = true;
 
     // Paints the sounds, outer circle, and triangle
     @Override
     public synchronized void paintComponent(Graphics g)
     {
+        /*
+         * TODO: Write extensive commits here, as graphics code is very difficult to understand 
+         * without lots of coments.
+         */
         super.paintComponent(g);
 
         if (first)
@@ -275,9 +283,8 @@ public class Wheel extends JPanel implements MouseListener
         Point c = new Point(getWidth() / 2, getHeight() / 2);
 
         int numsounds = sounds.size();
-        int soundnum = sounds.size();
-        g2.scale(scales[soundnum], scales[soundnum]);
-        g2.translate(translators[soundnum], translators[soundnum]);
+        g2.scale(scales[numsounds], scales[numsounds]);
+        g2.translate(translators[numsounds], translators[numsounds]);
 
         // Draw the wheel, rotating if necessary
         g2.rotate(rotationAngle, c.x, c.y);
@@ -291,7 +298,6 @@ public class Wheel extends JPanel implements MouseListener
             g2.scale(Sound.scaleFactor, Sound.scaleFactor);
             g2.rotate(-2.0 * Math.PI / numsounds, c.x, c.y);
         }
-
         // Draw the bottom triangle and the outer circle (not rotated)
         g2.rotate(-rotationAngle, c.x, c.y);
         g2.setColor(Color.blue);
@@ -323,8 +329,15 @@ public class Wheel extends JPanel implements MouseListener
         }
     }
 
-    // Allows the glass pane to drop a sound.  Replaces the sound on the wheel if it's over
-    // a sound; otherwise does nothing.
+    /**
+     * Replaces the sound on the wheel closest to a Point if the distance between the Point and the
+     * Sound's center isn't too large. Does nothing if the distance is too large. This allows a 
+     * Sound to be dropped onto the Wheel, and the Point in this case is the position of the mouse
+     * when the mouse button was released.
+     * 
+     * @param dropSound The sound to place on the wheel.
+     * @param mousePt  The point where the mouse button was released.
+     */
     public void drop(Sound dropSound, Point mousePt)
     {
         int soundNum = sounds.size() - 1;
@@ -359,7 +372,11 @@ public class Wheel extends JPanel implements MouseListener
         return p1;
     }
 
-    // Returns the INDEX of the sound closest to Point p
+    /**
+     * Returns the index of the sound in the Wheel closest to Point p.
+     * @param p A Point.
+     * @return The index of the sound in the wheel that is closest to p.
+     */
     private int findClosestSound(Point p)
     {
         Sound minSound = sounds.get(0);
@@ -408,7 +425,7 @@ public class Wheel extends JPanel implements MouseListener
         Sound closest = sounds.get(findClosestSound(translatedPt));
         if (dist(closest.getCenter(), translatedPt) < Sound.getHeight() / 2)
         {
-            closest.changeVolume();
+            closest.cycleVolume();
             // Repaint so the color change takes effect
         }
         repaint();

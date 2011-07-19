@@ -15,8 +15,8 @@ public class Heel extends Sound
     {
         g.translate(p.x, p.y);
         g.setColor(SOUND_COLOR);
-        g.drawOval(3 * w / 8, h / 4, w / 4, w / 4);
-        g.drawLine(3 * w / 8 + 3, h / 2 - 3, 5 * w / 8 - 3, h / 4 + 3);
+        g.drawOval(3 * WIDTH / 8, HEIGHT / 4, WIDTH / 4, WIDTH / 4);
+        g.drawLine(3 * WIDTH / 8 + 3, HEIGHT / 2 - 3, 5 * WIDTH / 8 - 3, HEIGHT / 4 + 3);
         g.translate(-p.x, -p.y);
     }
 }

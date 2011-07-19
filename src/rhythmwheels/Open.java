@@ -15,7 +15,7 @@ public class Open extends Sound
     {
         g.translate(p.x, p.y);
         g.setColor(SOUND_COLOR);
-        g.drawOval(3 * w / 8, h / 4, w / 4, w / 4);
+        g.drawOval(3 * WIDTH / 8, HEIGHT / 4, WIDTH / 4, WIDTH / 4);
         g.translate(-p.x, -p.y);
     }
 }
