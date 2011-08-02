@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
@@ -260,7 +261,6 @@ public class Wheel extends JPanel implements MouseListener
         }
         setPoints();
     }
-    
     boolean first = true;
 
     // Paints the sounds, outer circle, and triangle
@@ -268,7 +268,7 @@ public class Wheel extends JPanel implements MouseListener
     public synchronized void paintComponent(Graphics g)
     {
         /*
-         * TODO: Write extensive commits here, as graphics code is very difficult to understand 
+         * TODO: Write extensive comments here, as graphics code is very difficult to understand 
          * without lots of coments.
          */
         super.paintComponent(g);
@@ -305,18 +305,55 @@ public class Wheel extends JPanel implements MouseListener
         g2.setColor(Color.cyan);
         g2.drawArc(c.x - radius - 8, c.y - radius - 8, radius * 2 + 10,
                    radius * 2 + 10, 90, 60);
+        
         int xpts[] = new int[3];
-        int ypts[] = new int[3];
+        int ypts[] = new int[3];    
         xpts[0] = c.x;
         xpts[1] = c.x - 4;
         xpts[2] = c.x + 4;
         ypts[0] = c.y + radius;
         ypts[1] = ypts[0] + 9;
         ypts[2] = ypts[1];
-        g2.fillPolygon(new Polygon(xpts, ypts, 3));
-        //ADD
-        g2.drawString(Integer.toString(soundsPlayedCounter), xpts[0] - 4, ypts[2] + 15);
-        //End Add
+        g2.fillPolygon(xpts, ypts, 3);
+
+        // <editor-fold defaultstate="collapsed" desc="Beging drawing the sound counter">
+        // Begin drawing the sound counter.
+
+        // Reverse the scaling so that the rendered text does not shrink when the wheel shrinks
+        g2.scale(1 / scales[numsounds], 1 / scales[numsounds]);
+
+        /*
+         * All things that aren't affected by the scale factor, like constants and values got
+         * from methods that aren't sensitive to this Graphics' object's scale factor must be
+         * multiplied by the current scale factor.
+         */
+
+        // p is the Point where the baseline of the first character of the counter will be drawn.
+        Point p = new Point(xpts[0], ypts[2] + (int) (15 * 1 / scales[numsounds]));
+
+        // Get the bounds of the string to be drawn so that we can center it on the canvas.
+        Rectangle2D stringBounds = getFont().getStringBounds(Integer.toString(soundsPlayedCounter),
+                                                             g2.getFontRenderContext());
+        double stringWidth = (stringBounds.getMaxX() + stringBounds.getMinX());
+
+        /*
+         * Set x so that the string is center. As the string width is not dependant on the scale 
+         * factor we must explicitly multiply this value bu the scale factor.
+         */
+        p.x -= (stringWidth / 2) * (1 / scales[numsounds]);
+
+        /*
+         * Draw the string, we must transform p to the original coordinate system 
+         * (which we reversed just prior to this).
+         */
+        g2.drawString(Integer.toString(soundsPlayedCounter), (float) (p.x * scales[numsounds]),
+                      (float) (p.y * scales[numsounds]));
+        // Reverse the scaling, so that the rest of the code draws with the scaled values.
+        g2.scale(scales[numsounds], scales[numsounds]);
+
+        // End drawing the sound counter.
+        //</editor-fold>
+
         ypts[0] = c.y - radius - 8;
         ypts[1] = ypts[0] - 4;
         ypts[2] = ypts[0] + 4;
@@ -349,7 +386,7 @@ public class Wheel extends JPanel implements MouseListener
         int minIndex = findClosestSound(translatedPt);
         Sound minSound = sounds.get(minIndex);
         double mindist = dist(minSound.getCenter(), translatedPt);
-        
+
         // Replace it if we're close enough
         if (mindist < Sound.getHeight() / 2)
         {

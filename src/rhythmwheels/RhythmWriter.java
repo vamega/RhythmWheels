@@ -17,7 +17,7 @@ import org.jdom.output.XMLOutputter;
 
 /**
  *
- * @author madiav
+ * @author Varun Madiath (vamega@gmail.com)
  */
 public class RhythmWriter
 {

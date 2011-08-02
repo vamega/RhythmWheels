@@ -127,8 +127,7 @@ class Painter implements ActionListener
             wheelIterations[i] = 0;
             try
             {
-                wheelIterations[i] = Integer.parseInt(
-                        cp.rhythmWheel.wheelPanels[i].loopField.getText());
+                wheelIterations[i] = cp.rhythmWheel.wheelPanels[i].getIterations();
             }
             catch (NumberFormatException e)
             {

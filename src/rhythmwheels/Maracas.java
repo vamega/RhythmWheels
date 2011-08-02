@@ -6,6 +6,10 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 
+/**
+ * A class to represent the Maracas sound
+ * @author Varun Madiath (vamega@gmail.com)
+ */
 public class Maracas extends Sound
 {
 

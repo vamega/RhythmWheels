@@ -4,15 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 // Class WheelPanel handles the spinning of the wheel.  Contains a NumberPanel
 public class WheelPanel extends JPanel
@@ -22,7 +17,8 @@ public class WheelPanel extends JPanel
     public Color BACKGROUND_COLOR = RhythmWheel.BACKGROUND_COLOR;
     public Color FOREGROUND_COLOR = RhythmWheel.FOREGROUND_COLOR;
     public NumberPanel numPanel = new NumberPanel(wheel);
-    public JTextField loopField = new JTextField("1", 3);
+    SpinnerNumberModel loopSpinnerModel = new SpinnerNumberModel(1, 1, 100, 1);
+    public JSpinner loopSpinner = new JSpinner(loopSpinnerModel);
     public JLabel loopLabel = new JLabel("Loop:");
     public JPanel inputPanel = new JPanel();
     private JPanel top = new JPanel(new FlowLayout());
@@ -40,11 +36,11 @@ public class WheelPanel extends JPanel
         {
             Font current = loopLabel.getFont();
             loopLabel.setFont(new Font(current.getName(), Font.PLAIN, current.getSize() - 2));
-            loopField.setFont(new Font(current.getName(), Font.PLAIN, current.getSize() - 2));
+            loopSpinner.setFont(new Font(current.getName(), Font.PLAIN, current.getSize() - 2));
         }
 
         inputPanel.add(loopLabel);
-        inputPanel.add(loopField);
+        inputPanel.add(loopSpinner);
         add(inputPanel, BorderLayout.SOUTH);
         changeColors();
     }
@@ -70,15 +66,7 @@ public class WheelPanel extends JPanel
      */
     public int getIterations()
     {
-        int wheelIterations = 0;
-        try
-        {
-            wheelIterations = Integer.parseInt(loopField.getText());
-        }
-        catch (NumberFormatException e)
-        {
-            setIterations(0);
-        }
+        int wheelIterations = (Integer) loopSpinner.getValue();
         return wheelIterations;
     }
     
@@ -89,6 +77,6 @@ public class WheelPanel extends JPanel
      */
     public void setIterations(int numIterations)
     {
-        loopField.setText(Integer.toString(numIterations));
+        loopSpinner.setValue(numIterations);
     }
 }

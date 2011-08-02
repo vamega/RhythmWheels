@@ -30,6 +30,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -52,10 +53,11 @@ public class SequenceAudioInputStream extends AudioInputStream
     public SequenceAudioInputStream(AudioFormat audioFormat, Collection audioInputStreams, int speed)
     {
         super(new ByteArrayInputStream(new byte[0]), audioFormat, AudioSystem.NOT_SPECIFIED);
-        m_audioInputStreamList = new ArrayList(audioInputStreams);
+        m_audioInputStreamList = new ArrayList<AudioInputStream>(audioInputStreams);
         sequencedData = new ArrayList<Byte>();
         isSequenced = false;
         this.speed = speed < 1 ? speed : 0;
+//        this.speed = speed;
         streamOffset = 0;
         m_nCurrentStream = 0;
     }
@@ -140,7 +142,7 @@ public class SequenceAudioInputStream extends AudioInputStream
     {
         sequenceData();
 
-        if(streamOffset < sequencedData.size())
+        if (streamOffset < sequencedData.size())
         {
             return sequencedData.get(streamOffset++);
         }
@@ -224,7 +226,7 @@ public class SequenceAudioInputStream extends AudioInputStream
                 int numFrames = (int) (totalBytesRead / fSize);
 
                 /*
-                 * The formulat that determines how much of the original stream to keep.
+                 * The formula that determines how much of the original stream to keep.
                  * Calculations are performed on the number of frames, to avoid ending up with
                  * and array that isn't a integer multiple of the frame size.
                  */
@@ -233,6 +235,8 @@ public class SequenceAudioInputStream extends AudioInputStream
                                               / (ControlsPanel.MAX_SPEED - ControlsPanel.MIN_SPEED))
                                            * fSize);
 
+//                if(bytesRequired < totalBytesRead)
+//                {
                 /*
                  * Calculate the position in the list, after which data need not be maintained.
                  */
@@ -246,6 +250,18 @@ public class SequenceAudioInputStream extends AudioInputStream
                  * but that method is protected. This calls that method behind the scenes.
                  */
                 sequencedData.subList(startIndex, sequencedData.size()).clear();
+//                }
+//                else
+//                {
+//                    Byte[] empty = new Byte[(int)((bytesRequired - totalBytesRead))];
+//                    
+//                    for (int i = 0; i < empty.length; i++)
+//                    {
+//                        empty[i] = 0;
+//                    }
+//                    
+//                    sequencedData.addAll(Arrays.asList(empty));
+//                }
             }
             while (advanceStream());
 

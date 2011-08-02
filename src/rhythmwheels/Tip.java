@@ -3,6 +3,10 @@ package rhythmwheels;
 import java.awt.Graphics;
 import java.awt.Point;
 
+/**
+ * A class to represent the Tip sound
+ * @author Varun Madiath (vamega@gmail.com)
+ */
 public class Tip extends Sound
 {
 

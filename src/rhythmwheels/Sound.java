@@ -11,6 +11,10 @@ import java.io.Serializable;
 import java.net.URL;
 import java.io.IOException;
 
+/**
+ * 
+ * @author Varun Madiath (vamega@gmail.com)
+ */
 public abstract class Sound implements Cloneable, Serializable
 {
 
@@ -18,7 +22,6 @@ public abstract class Sound implements Cloneable, Serializable
     protected static Color SOUND_COLOR = Color.cyan;
     protected Color backgroundColor = Color.black;
     protected static int SOUND_LENGTH = 250; // milliseconds
-    protected static int DELAY_LENGTH = 50; // milliseconds
     public String strCurrentFileName;       // such as clap1
     protected AudioClip audioClip;          // such as clap
     public String strFileBaseName;

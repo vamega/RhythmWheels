@@ -2,6 +2,10 @@ package rhythmwheels;
 
 import java.awt.Graphics;
 
+/**
+ * A class to represent the Scratch3 sound.
+ * @author Varun Madiath (vamega@gmail.com)
+ */
 public class Scratch3 extends Sound
 {
 

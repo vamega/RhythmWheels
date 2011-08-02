@@ -2,6 +2,10 @@ package rhythmwheels;
 
 import java.awt.Graphics;
 
+/**
+ * A class to represent the Tamborine sound.
+ * @author Varun Madiath <vamega@gmail.com>
+ */
 public class Tamborine extends Sound
 {
 

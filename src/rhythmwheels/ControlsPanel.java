@@ -10,8 +10,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -22,15 +20,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.Timer;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jdom.JDOMException;
 
 public class ControlsPanel extends JPanel implements ActionListener
 {
 
     public static final int MIN_SPEED = -8;
-    public static final int MAX_SPEED = 2;
+    public static final int MAX_SPEED = 4;
     public static final int DEFAULT_SPEED = 0;
-    
     public static final Color BACKGROUND_COLOR = RhythmWheel.BACKGROUND_COLOR;
     public static final Color FOREGROUND_COLOR = RhythmWheel.FOREGROUND_COLOR;
     private JButton playButton = new JButton("Play");
@@ -38,6 +37,8 @@ public class ControlsPanel extends JPanel implements ActionListener
     private JButton loadButton = new JButton("Load Rhythm");
     private JButton saveButton = new JButton("Save Rhythm");
     private JFileChooser fileChooser = new JFileChooser();
+    private FileNameExtensionFilter rhythmFilter = new FileNameExtensionFilter("RhythmWheel Rhythms",
+                                                                               "rwr");
     private JPanel bottom = new JPanel();
     private JPanel sliderPanel = new JPanel();
     private JPanel top, lPanel, rPanel;
@@ -49,7 +50,6 @@ public class ControlsPanel extends JPanel implements ActionListener
     private ConcatThread concatThread;
     public JDialog dlg;
     private Painter painter;
-    public int playIterations = 1;
     protected Timer paintTimer;
     byte[] mixedBytes;
     public AudioFormat audioFormat;
@@ -99,6 +99,9 @@ public class ControlsPanel extends JPanel implements ActionListener
         rPanel.setAlignmentY(JPanel.CENTER_ALIGNMENT);
         stopButton.addActionListener(this);
 
+        fileChooser.setFileFilter(rhythmFilter);
+        fileChooser.removeChoosableFileFilter(fileChooser.getAcceptAllFileFilter());
+
         saveButton.addActionListener(new ActionListener()
         {
 
@@ -109,6 +112,13 @@ public class ControlsPanel extends JPanel implements ActionListener
                 if (returnVal == JFileChooser.APPROVE_OPTION)
                 {
                     File selectedFile = fileChooser.getSelectedFile();
+                    String selectedFileName = selectedFile.getPath();
+                    
+                    if(!fileChooser.getFileFilter().accept(selectedFile))
+                    {
+                        selectedFile = new File(selectedFileName + "." +rhythmFilter.getExtensions()[0]);
+                    }
+
                     Wheel[] wheels = new Wheel[rhythmWheel.getWheelPanels().length];
 
                     for (int i = 0; i < wheels.length; i++)
@@ -274,13 +284,11 @@ public class ControlsPanel extends JPanel implements ActionListener
         // ************************ PLAY *****************************
         if (evt.getSource() == playButton)
         {
-
             stopButton.doClick();
 
             if (clipPlayer != null && clipPlayer.isAlive())
             {
                 clipPlayer.stopPlaying();
-
                 // Show dialog "Processing"
             }
             int cx = (rhythmWheel.getX() + rhythmWheel.getWidth()) / 2
@@ -298,7 +306,7 @@ public class ControlsPanel extends JPanel implements ActionListener
             painter.reset();
 
             // Probably not the most efficient way to do this
-            clipPlayer = new ClipPlayer(mixedBytes, audioFormat, paintTimer, playIterations);
+            clipPlayer = new ClipPlayer(mixedBytes, audioFormat, paintTimer, 1);
             clipPlayer.start();
         }
         else if (evt.getSource() == stopButton)

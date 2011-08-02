@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -22,10 +21,10 @@ public class AudioConcat
     }
 
     /*************** MIX *****************************************
-    Given a vector of ByteArrayInputStreams, returns a byte array
+    Given a List of ByteArrayInputStreams, returns a byte array
     representing the output stream created
      *************************************************************/
-    public static byte[] Mix(Vector inputStreams, int playbackSpeed)
+    public static byte[] Mix(List<ByteArrayInputStream> inputStreams, int playbackSpeed)
     {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         List audioInputStreamList = new ArrayList();
@@ -35,7 +34,7 @@ public class AudioConcat
             AudioInputStream audioInputStream = null;
             try
             {
-                ByteArrayInputStream bis = (ByteArrayInputStream) inputStreams.elementAt(i);
+                ByteArrayInputStream bis = inputStreams.get(i);
                 audioInputStream = AudioSystem.getAudioInputStream(bis);
             }
             catch (Exception e)
@@ -68,22 +67,22 @@ public class AudioConcat
         return original;
     }
 
-     /**
-      * Creates a stream representing of the sequencing of the audio from a list of audio files.
-      * @param fileNames The list of strings representing the file names of the audio files.
-      * @param playbackSpeed A factor which determines how much of the end of each audioStream to
-      *        drop so as to achieve sounds that finish playback in a shorter period of time.
-      * @return A byte array representing the sequenced audio files.
-      */
-    public static byte[] sequence(Vector fileNames, int playbackSpeed)
+    /**
+     * Creates a stream representing of the sequencing of the audio from a list of audio files.
+     * @param fileNames The list of strings representing the file names of the audio files.
+     * @param playbackSpeed A factor which determines how much of the end of each audioStream to
+     *        drop so as to achieve sounds that finish playback in a shorter period of time.
+     * @return A byte array representing the sequenced audio files.
+     */
+    public static byte[] sequence(List<String> fileNames, int playbackSpeed)
     {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         AudioFormat audioFormat = null;
-        List audioInputStreamList = new ArrayList();
+        List<AudioInputStream> audioInputStreamList = new ArrayList<AudioInputStream>();
 
         for (int i = 0; i < fileNames.size(); i++)
         {
-            String fileName = (String) fileNames.elementAt(i);
+            String fileName = fileNames.get(i);
             if (fileName == null)
             {
                 System.err.println("Soundfile is null for the " + (i + 1) + "th file");

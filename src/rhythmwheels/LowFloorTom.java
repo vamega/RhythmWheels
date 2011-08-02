@@ -5,6 +5,10 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+/**
+ * A class to represent the Low Floor Tom sound
+ * @author Varun Madiath (vamega@gmail.com)
+ */
 public class LowFloorTom extends Sound
 {
 

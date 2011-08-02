@@ -2,6 +2,10 @@ package rhythmwheels;
 
 import java.awt.Graphics;
 
+/**
+ * A class to represent the Heel sound
+ * @author Varun Madiath (vamega@gmail.com)
+ */
 public class Heel extends Sound
 {
 

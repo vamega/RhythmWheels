@@ -2,6 +2,10 @@ package rhythmwheels;
 
 import java.awt.Graphics;
 
+/**
+ * A class to represent the Clave sound
+ * @author Varun Madiath (vamega@gmail.com)
+ */
 public class Clave extends Sound
 {
 
@@ -20,7 +24,5 @@ public class Clave extends Sound
         g.drawArc(3 * WIDTH / 8 + 1, 3 * HEIGHT / 8 - 2, WIDTH / 4, WIDTH / 4, 0, -180);
         g.drawLine(3 * WIDTH / 8 + 2, HEIGHT / 2 - 4, 5 * WIDTH / 8 - 1, HEIGHT / 2 - 4);
         g.translate(-p.x, -p.y);
-        //Graphics2D g2 = (Graphics2D)g;
-        //g2.scale(1.0/.8, 1.0/.8);
     }
 }

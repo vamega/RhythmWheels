@@ -2,6 +2,10 @@ package rhythmwheels;
 
 import java.awt.*;
 
+/**
+ * A class to represent the Neck sound
+ * @author Varun Madiath (vamega@gmail.com)
+ */
 public class Neck extends Sound
 {
 

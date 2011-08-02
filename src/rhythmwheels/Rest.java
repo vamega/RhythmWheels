@@ -2,6 +2,11 @@ package rhythmwheels;
 
 import java.awt.Graphics;
 
+/**
+ * A class to represent the Rest sound.
+ * This class will has only one volume.
+ * @author Varun Madiath (vamega@gmail.com)
+ */
 public class Rest extends Sound
 {
 
