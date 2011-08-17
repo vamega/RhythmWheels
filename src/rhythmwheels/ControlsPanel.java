@@ -38,7 +38,7 @@ public class ControlsPanel extends JPanel implements ActionListener
     private JButton saveButton = new JButton("Save Rhythm");
     private JFileChooser fileChooser = new JFileChooser();
     private FileNameExtensionFilter rhythmFilter = new FileNameExtensionFilter("RhythmWheel Rhythms",
-                                                                               "rwr");
+                                                                               "xml");
     private JPanel bottom = new JPanel();
     private JPanel sliderPanel = new JPanel();
     private JPanel top, lPanel, rPanel;
@@ -285,6 +285,10 @@ public class ControlsPanel extends JPanel implements ActionListener
         if (evt.getSource() == playButton)
         {
             stopButton.doClick();
+            //This shouldnt be necessary, but for some reasons Web Start doesn't seem to repect
+            //the call to paintTimer.stop() and the timer keeps firing events. If that is ever fixed.
+            // This and the associated call in the stop button handler should be removed.
+            paintTimer.addActionListener(painter);
 
             if (clipPlayer != null && clipPlayer.isAlive())
             {
@@ -310,8 +314,7 @@ public class ControlsPanel extends JPanel implements ActionListener
             clipPlayer.start();
         }
         else if (evt.getSource() == stopButton)
-        {
-            paintTimer.stop();
+        {   
             if (clipPlayer != null)
             {
                 clipPlayer.stopPlaying();
@@ -319,9 +322,13 @@ public class ControlsPanel extends JPanel implements ActionListener
             for (int i = 0; i < rhythmWheel.NUM_WHEELS; i++)
             {
                 rhythmWheel.getWheelPanels()[i].wheel.setRotationAngle(0);
-                // We need to stop the wheel from continuing to rotate.
-                paintTimer.stop();
             }
+            //Stop the wheel from rotating
+            paintTimer.stop();
+            
+            //This shouldnt be necessary, but for some reasons Web Start doesn't seem to repect
+            //the call to paintTimer.stop() and the timer keeps firing events.
+            paintTimer.removeActionListener(painter);
         }
     }
 

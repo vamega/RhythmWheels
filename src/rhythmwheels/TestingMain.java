@@ -1,6 +1,7 @@
 package rhythmwheels;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 /**
  * This class runs the RhythmWheels program as an application.
@@ -15,10 +16,14 @@ public class TestingMain
      */
     public static void main(String[] args)
     {
-        RhythmWheel rw = new RhythmWheel();
-        rw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        rw.setVisible(true);
-        
-        
+        SwingUtilities.invokeLater(new Runnable()
+        {
+            public void run()
+            {
+                RhythmWheel rw = new RhythmWheel();
+                rw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                rw.setVisible(true);
+            }
+        });
     }
 }

@@ -42,6 +42,7 @@ public class RhythmWheel extends JFrame implements ActionListener
     public static int MAX_WHEELS = 3;
     public static final Color BACKGROUND_COLOR = Color.darkGray;
     public static final Color FOREGROUND_COLOR = Color.white;
+    
     //TODO: Evaluate if this is actually used anywhere.
     public static URL docBase;
     private JLabel soundCatLabel;
@@ -115,6 +116,9 @@ public class RhythmWheel extends JFrame implements ActionListener
                 {
                     new LatinoCaribbean(), new HipHop(), new Rock()
                 });
+        categoryBox.setUI(ColorArrowUI.createUI(categoryBox));
+        numWheelsBox.setUI(ColorArrowUI.createUI(numWheelsBox));
+        
         categoryBox.setBackground(BACKGROUND_COLOR);
         categoryBox.setForeground(FOREGROUND_COLOR);
         categoryBox.addActionListener(this);

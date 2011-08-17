@@ -5,10 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 public class RWApplet extends JApplet implements ActionListener, WindowListener
 {
@@ -19,13 +23,33 @@ public class RWApplet extends JApplet implements ActionListener, WindowListener
     @Override
     public void init()
     {
-        rw = new RhythmWheel(getDocumentBase());
-        rw.addWindowListener(this);
-        rw.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        button.addActionListener(this);
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel.add(button);
-        getContentPane().add(panel);
+        final WindowListener rwWindowListener = this;
+        final ActionListener rwActionListener = this;
+        
+        try
+        {
+            SwingUtilities.invokeAndWait(new Runnable()
+            {
+                public void run()
+                {
+                    rw = new RhythmWheel(getDocumentBase());
+                    rw.addWindowListener(rwWindowListener);
+                    rw.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                    button.addActionListener(rwActionListener);
+                    JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                    panel.add(button);
+                    getContentPane().add(panel);
+                }
+            });
+        }
+        catch (InterruptedException ex)
+        {
+            Logger.getLogger(RWApplet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (InvocationTargetException ex)
+        {
+            Logger.getLogger(RWApplet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void actionPerformed(ActionEvent evt)

@@ -23,22 +23,35 @@ public class RhythmWriter
 {
 
     public static final String CURRENT_FORMAT = "0.2";
+    //Named Elements
+    public static final String ROOT_ELEMENT = "engine";
+    public static final String SOUND_ELEMENT = "sound";
+    public static final String WHEEL_ELEMENT = "wheel";
+    
+    public static final String ROOT_FORMAT_ATTRIBUTE = "format";
+    public static final String ROOT_TYPE_ATTRIBUTE = "type";
+    public static final String ROOT_SPEED_ATTRIBUTE = "speed";
+    
+    public static final String WHEEL_ITERATIONS_ATTRIBUTE = "speed";
+    
+    public static final String SOUND_VOLUME_ATTRIBUTE = "volume";
 
     public static void saveState(Wheel[] wheels, File outputFile, RhythmWheel rw) throws
             FileNotFoundException,
             IOException
     {
-        Element rhythm = new Element("rhythm");
-        rhythm.setAttribute("format", CURRENT_FORMAT);
-        rhythm.setAttribute("speed", Integer.toString(rw.controlPanel.getSpeed()));
+        Element engine = new Element(ROOT_ELEMENT);
+        engine.setAttribute(ROOT_TYPE_ATTRIBUTE, "RS");
+        engine.setAttribute(ROOT_FORMAT_ATTRIBUTE, CURRENT_FORMAT);
+        engine.setAttribute(ROOT_SPEED_ATTRIBUTE, Integer.toString(rw.controlPanel.getSpeed()));
 
-        Document data = new Document(rhythm);
+        Document data = new Document(engine);
 
         List<Element> wheelElements = new LinkedList<Element>();
 
         for (int i = 0; i < wheels.length; i++)
         {
-            Element currentWheel = new Element("wheel");
+            Element currentWheel = new Element(WHEEL_ELEMENT);
             List<Sound> soundObjects = wheels[i].getSounds();
             List<Element> soundElements = new LinkedList<Element>();
 
@@ -47,9 +60,9 @@ public class RhythmWriter
                 Sound currentSound = (Sound) soundObjects.get(j);
                 String name = currentSound.getClass().getCanonicalName();
 
-                Element soundElement = new Element("Sound");
+                Element soundElement = new Element(SOUND_ELEMENT);
                 soundElement.setText(name);
-                soundElement.setAttribute("volume", Integer.toString(currentSound.getVolume()));
+                soundElement.setAttribute(SOUND_VOLUME_ATTRIBUTE, Integer.toString(currentSound.getVolume()));
 
                 soundElements.add(soundElement);
             }
@@ -57,18 +70,19 @@ public class RhythmWriter
             if (!soundElements.isEmpty())
             {
                 currentWheel.setContent(soundElements);
-                currentWheel.setAttribute("iterations",
+                currentWheel.setAttribute(WHEEL_ITERATIONS_ATTRIBUTE,
                                           Integer.toString(rw.wheelPanels[i].getIterations()));
                 wheelElements.add(currentWheel);
             }
         }
 
-        rhythm.addContent(wheelElements);
+        engine.addContent(wheelElements);
 
         XMLOutputter output = new XMLOutputter(Format.getPrettyFormat());
         OutputStream outStream = new FileOutputStream(outputFile);
 
         output.output(data, outStream);
+        outStream.close();
     }
 
     public static void loadState(Wheel[] wheels, File inputFile, RhythmWheel rw) throws
@@ -79,7 +93,7 @@ public class RhythmWriter
         SAXBuilder documentBuilder = new SAXBuilder();
         Document data = documentBuilder.build(inputFile);
 
-        if (!data.getRootElement().getAttributeValue("format").equals(CURRENT_FORMAT))
+        if (!data.getRootElement().getAttributeValue(ROOT_FORMAT_ATTRIBUTE).equals(CURRENT_FORMAT))
         {
             //TODO: Create Exception class for exceptions of this sort.
             throw new Exception("Incorrect Format");
@@ -108,12 +122,13 @@ public class RhythmWriter
                 int soundVolume;
                 try
                 {
-                    soundVolume = Integer.parseInt(soundElement.getAttributeValue("volume"));
+                    soundVolume = Integer.parseInt(soundElement.getAttributeValue(SOUND_VOLUME_ATTRIBUTE));
                 }
                 catch (NumberFormatException numberFormatException)
                 {
                     throw new JDOMParseException(
-                            "\"value\" attribute of sound element has non-numeric content",
+                            "\""+ SOUND_VOLUME_ATTRIBUTE + "\"" +
+                            "attribute of sound element has non-numeric content",
                             numberFormatException, data);
                 }
 
@@ -124,15 +139,17 @@ public class RhythmWriter
             int iterations;
             try
             {
-                iterations = Integer.parseInt(currentWheel.getAttributeValue("iterations"));
+                iterations = Integer.parseInt(currentWheel.getAttributeValue(
+                        WHEEL_ITERATIONS_ATTRIBUTE));
             }
             catch (NumberFormatException numberFormatException)
             {
                 throw new JDOMParseException(
-                        "\"iterations\" attribute of sound element has non-numeric content",
+                        "\"" + WHEEL_ITERATIONS_ATTRIBUTE + "\""
+                        + "attribute of sound element has non-numeric content",
                         numberFormatException, data);
             }
-            
+
             rw.wheelPanels[wheelIndex].setIterations(iterations);
 
             rw.wheelPanels[wheelIndex].numPanel.select(soundElements.size() - 1);
@@ -140,6 +157,7 @@ public class RhythmWriter
             ++wheelIndex;
         }
 
-        rw.controlPanel.setSpeed(Integer.parseInt(data.getRootElement().getAttributeValue("speed")));
+        rw.controlPanel.setSpeed(Integer.parseInt(data.getRootElement().getAttributeValue(
+                ROOT_SPEED_ATTRIBUTE)));
     }
 }

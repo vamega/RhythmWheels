@@ -62,7 +62,6 @@ public class SequenceAudioInputStream extends AudioInputStream
         m_nCurrentStream = 0;
     }
 
-    // TODO: remove
     private boolean addAudioInputStream(AudioInputStream audioStream)
     {
         if (DEBUG)

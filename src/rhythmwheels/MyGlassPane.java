@@ -145,7 +145,8 @@ class Listener extends MouseInputAdapter
             {
                 glassPane.setPoint(null);
                 glassPane.repaint();
-//                glassPane.setVisible(false);
+                // Needed to prevent excessive clicks
+                glassPane.setVisible(false);
             }
         }
 

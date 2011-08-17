@@ -24,7 +24,7 @@ public class AudioConcat
     Given a List of ByteArrayInputStreams, returns a byte array
     representing the output stream created
      *************************************************************/
-    public static byte[] Mix(List<ByteArrayInputStream> inputStreams, int playbackSpeed)
+    public static byte[] Mix(List<ByteArrayInputStream> inputStreams)
     {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         List audioInputStreamList = new ArrayList();
@@ -91,14 +91,8 @@ public class AudioConcat
             try
             {
                 InputStream is;
-                if (RhythmWheel.isApplet)
-                {
-                    is = RhythmWheel.class.getResourceAsStream(fileName);
-                }
-                else
-                {
-                    is = new FileInputStream(fileName);
-                }
+
+                is = RhythmWheel.class.getResourceAsStream(fileName);
 
                 ByteArrayInputStream bis = new ByteArrayInputStream(StreamUtil.toByteArray(is));
                 audioInputStream = AudioSystem.getAudioInputStream(bis);
@@ -117,7 +111,8 @@ public class AudioConcat
         }
 
         AudioInputStream audioInputStream = new SequenceAudioInputStream(audioFormat,
-                                                                         audioInputStreamList, playbackSpeed);
+                                                                         audioInputStreamList,
+                                                                         playbackSpeed);
 
         try
         {
