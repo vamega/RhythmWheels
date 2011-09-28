@@ -47,6 +47,7 @@ class ConcatThread extends Thread
             }
             count++;
         }
+//        rhythmWheel.setVisible(true);
         cp.dlg.setVisible(false);
     }
 
@@ -72,10 +73,13 @@ class ConcatThread extends Thread
 
         for (int w = 0; w < rhythmWheel.NUM_WHEELS; w++)
         {
-            inputStreams.add(createInputStream(w, delayFile,
-                                               rhythmWheel.wheelPanels[w].wheel.getSounds(),
-                                               rhythmWheel.wheelPanels[w].getIterations(),
-                                               cp.getSpeed()));
+            if (rhythmWheel.wheelPanels[w].getIterations() != 0)
+            {
+                inputStreams.add(createInputStream(w, delayFile,
+                                                   rhythmWheel.wheelPanels[w].wheel.getSounds(),
+                                                   rhythmWheel.wheelPanels[w].getIterations(),
+                                                   cp.getSpeed()));
+            }
         }
         return inputStreams;
     }
@@ -88,15 +92,12 @@ class ConcatThread extends Thread
      * @return
      */
     private static ByteArrayInputStream createInputStream(int wheelNum, String delayFile,
-                                                   List<Sound> wheelSounds, int wheelIterations,
-                                                   int speed)
+                                                          List<Sound> wheelSounds,
+                                                          int wheelIterations,
+                                                          int speed)
     {
-//        Wheel wheel = rhythmWheel.wheelPanels[wheelNum].wheel;
-//        List<Sound> wheelSounds = wheel.getSounds();
-
         // The list of files created for this wheel
         List<String> fileNames = new ArrayList<String>();
-//        int wheelIterations = rhythmWheel.wheelPanels[wheelNum].getIterations();
 
         for (int j = 0; j < wheelIterations; j++)
         {
@@ -114,7 +115,6 @@ class ConcatThread extends Thread
         }
 
         // Concatenate the files in the wheel
-//        return new ByteArrayInputStream(concatenator.sequence(fileNames, cp.slider.getValue()));
         return new ByteArrayInputStream(AudioConcat.sequence(fileNames, speed));
 
     }

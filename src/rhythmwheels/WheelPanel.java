@@ -17,7 +17,7 @@ public class WheelPanel extends JPanel
     public Color BACKGROUND_COLOR = RhythmWheel.BACKGROUND_COLOR;
     public Color FOREGROUND_COLOR = RhythmWheel.FOREGROUND_COLOR;
     public NumberPanel numPanel = new NumberPanel(wheel);
-    SpinnerNumberModel loopSpinnerModel = new SpinnerNumberModel(1, 1, 100, 1);
+    SpinnerNumberModel loopSpinnerModel = new SpinnerNumberModel(1, 0, 100, 1);
     public JSpinner loopSpinner = new JSpinner(loopSpinnerModel);
     public JLabel loopLabel = new JLabel("Loop:");
     public JPanel inputPanel = new JPanel();

@@ -8,7 +8,6 @@ import java.awt.Graphics;
  */
 public class Scratch1 extends Sound
 {
-
     public Scratch1()
     {
         super("scratch1");

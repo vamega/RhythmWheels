@@ -62,7 +62,7 @@ public class ControlsPanel extends JPanel implements ActionListener
         dlg = new JDialog(new JFrame(), "Processing Sounds", true);
         dlg.getContentPane().add(new JLabel(
                 "Processing Sounds.  Please Wait..."));
-        dlg.setSize(220, 60);
+        dlg.setSize(720, 500);
         dlg.setResizable(false);
 
         setLayout(new BorderLayout());
@@ -302,6 +302,7 @@ public class ControlsPanel extends JPanel implements ActionListener
             dlg.setLocation(cx, cy);
             concatThread = new ConcatThread(this);
             concatThread.start();
+//            rhythmWheel.setVisible(false);
             dlg.setVisible(true);
 
             repaint();
