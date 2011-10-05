@@ -20,9 +20,14 @@ public class TestingMain
         {
             public void run()
             {
-                RhythmWheel rw = new RhythmWheel();
-                rw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                rw.setVisible(true);
+                JFrame topFrame = new JFrame("Rhythm Wheels");
+                topFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                
+                TopContainer root = new TopContainer();
+                topFrame.add(root.panes);
+                
+//                topFrame.setSize(1000,800);
+                topFrame.setVisible(true);
             }
         });
     }

@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 
 /*
  * Varun Madiath comments
@@ -29,7 +30,7 @@ import javax.swing.JPanel;
  * When I got this, the code was a mess, I've tried to clean it up since. Hopefully you'll be able 
  * to finish the job, and actually make this something thats easy to modify.
  */
-public class RhythmWheel extends JFrame implements ActionListener
+public class RhythmWheel extends JRootPane implements ActionListener
 {
     public static boolean isApplet = false;
 
@@ -83,7 +84,6 @@ public class RhythmWheel extends JFrame implements ActionListener
 
     public RhythmWheel(URL docbase)
     {
-        super("Rhythm Wheels");
         if(docbase != null)
         {
             docBase = docbase;
@@ -92,12 +92,12 @@ public class RhythmWheel extends JFrame implements ActionListener
         if (isLowRes())
         {
             Sound.scaleFactor = 0.8;
-            setSize(770, 550);
+//            setSize(770, 550);
         }
         else
         {
             Sound.scaleFactor = 1.0;
-            setSize(800, 670);
+//            setSize(800, 670);
         }
 
         controlPanel = new ControlsPanel(this);
