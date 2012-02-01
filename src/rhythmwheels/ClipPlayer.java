@@ -32,6 +32,8 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.Timer;
+import rhythmwheels.scripting.Events;
+import rhythmwheels.scripting.ScriptManager;
 
 /**
  * This file is part of the Java Sound Examples.
@@ -215,7 +217,8 @@ public class ClipPlayer extends Thread implements LineListener
                 System.out.println("AudioPlayer.main(): before drain");
             }
         } // end for
-
+        
+        ScriptManager.getInstance().fireEvent(Events.ON_WHEELS_COMPLETE);
     }
 
     public void update(LineEvent event)

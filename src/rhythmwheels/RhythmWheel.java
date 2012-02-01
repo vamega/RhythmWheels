@@ -76,11 +76,6 @@ public class RhythmWheel extends JRootPane implements ActionListener
             lowRes = false;
         }
     }
-    
-    public RhythmWheel()
-    {
-        this(null);
-    }
 
     public RhythmWheel(URL docbase)
     {
@@ -278,5 +273,15 @@ public class RhythmWheel extends JRootPane implements ActionListener
     public void setDropDownValue(int index)
     {
         numWheelsBox.setSelectedIndex(index - 1);
+    }
+    
+    public void unlockNumWheels()
+    {
+        numWheelsBox.setEnabled(true);
+    }
+    
+    public void lockNumWheels()
+    {
+        numWheelsBox.setEnabled(false);
     }
 }

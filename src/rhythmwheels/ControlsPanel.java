@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -20,9 +22,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.Timer;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jdom.JDOMException;
+import rhythmwheels.scripting.Events;
+import rhythmwheels.scripting.ScriptManager;
 
 public class ControlsPanel extends JPanel implements ActionListener
 {
@@ -59,7 +62,7 @@ public class ControlsPanel extends JPanel implements ActionListener
     {
         rhythmWheel = r;
         concatThread = new ConcatThread(this);
-        dlg = new JDialog(new JFrame(), "Processing Sounds", true);
+        dlg = new JDialog(TestingMain.getAppFrame(), "Processing Sounds", true);
         dlg.getContentPane().add(new JLabel(
                 "Processing Sounds.  Please Wait..."));
         dlg.setSize(720, 500);
@@ -289,6 +292,8 @@ public class ControlsPanel extends JPanel implements ActionListener
             //the call to paintTimer.stop() and the timer keeps firing events. If that is ever fixed.
             // This and the associated call in the stop button handler should be removed.
             paintTimer.addActionListener(painter);
+            ScriptManager s = ScriptManager.getInstance();
+            s.fireEvent(Events.ON_PLAY);
 
             if (clipPlayer != null && clipPlayer.isAlive())
             {

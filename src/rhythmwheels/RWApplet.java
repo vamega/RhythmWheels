@@ -17,7 +17,7 @@ import javax.swing.SwingUtilities;
 public class RWApplet extends JApplet implements ActionListener, WindowListener
 {
 
-    RhythmWheel rw;
+    JFrame window;
     JButton button = new JButton("Start Rhythm Wheels");
 
     @Override
@@ -32,9 +32,11 @@ public class RWApplet extends JApplet implements ActionListener, WindowListener
             {
                 public void run()
                 {
-                    rw = new RhythmWheel(getDocumentBase());
-                    rw.addWindowListener(rwWindowListener);
-                    rw.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                    window = new JFrame();
+                    TopContainer root = new TopContainer(getDocumentBase());
+                    window.add(root);
+                    window.addWindowListener(rwWindowListener);
+                    window.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
                     button.addActionListener(rwActionListener);
                     JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
                     panel.add(button);
@@ -70,14 +72,14 @@ public class RWApplet extends JApplet implements ActionListener, WindowListener
 
     private void showWindow()
     {
-        rw.setVisible(true);
+        window.setVisible(true);
         button.setText("Close Rhythm Wheels");
     }
 
     private void hideWindow()
     {
         button.setText("Start Rhythm Wheels");
-        rw.setVisible(false);
+        window.setVisible(false);
     }
 
     public void windowOpened(WindowEvent evt)

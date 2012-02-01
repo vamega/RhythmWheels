@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.geom.Line2D;
 import java.io.Serializable;
 import java.net.URL;
@@ -198,6 +199,10 @@ public abstract class Sound implements Cloneable, Serializable
     {
         // Draws the black triangle
         Graphics2D g2 = (Graphics2D) g;
+        
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        
         g2.scale(scaleFactor, scaleFactor);
         Point p1 = new Point(4 + p.x, 4 + p.y);
         Point p2 = new Point(WIDTH - 4 + p.x, 4 + p.y);
