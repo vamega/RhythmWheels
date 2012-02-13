@@ -81,7 +81,46 @@ public class TestingMain implements ActionListener
 //                topFrame.setVisible(true);
 //            }
 //        });
-
+//        SwingUtilities.invokeLater(new Runnable()
+//        {
+//
+//            public void run()
+//            {
+//
+//                JFrame topFrame = new JFrame("Rhythm Wheels");
+//                JMenuBar menuBar = new JMenuBar();
+//                JMenu menu = new JMenu("Script");
+//                menuBar.add(menu);
+//
+//                JMenuItem menuItem = new JMenuItem("Load Script");
+//                menu.add(menuItem);
+//
+//                topFrame.setJMenuBar(menuBar);
+//                topFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//                TopContainer root = new TopContainer();
+//                topFrame.add(root.panes);
+//
+//                menuItem.addActionListener(new ActionListener()
+//                {
+//
+//                    public void actionPerformed(ActionEvent e)
+//                    {
+//                        JFileChooser fc = new JFileChooser();
+//                        int returnVal = fc.showOpenDialog(root);
+//
+//                        if (returnVal == JFileChooser.APPROVE_OPTION)
+//                        {
+//                            File selectedFile = fc.getSelectedFile();
+//                            TopContainer.r
+//                        }
+//                    }
+//                });
+//
+//                topFrame.setSize(1100, 800);
+//                topFrame.setVisible(true);
+//            }
+//        });
         TestingMain m = new TestingMain();
     }
 
