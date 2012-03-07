@@ -68,7 +68,7 @@ class ConcatThread extends Thread
         String delayFile = null;
         if (sliderVal > 0)
         {
-            delayFile = "sounds/blank" + sliderVal + Sound.EXTENSION;
+            delayFile = "sounds/blank" + sliderVal + Sound.SOUND_EXTENSION;
         }
 
         for (int w = 0; w < rhythmWheel.NUM_WHEELS; w++)
@@ -105,7 +105,7 @@ class ConcatThread extends Thread
             for (int s = 0; s < wheelSounds.size(); s++)
             {
                 Sound sound = wheelSounds.get(s);
-                fileNames.add(sound.strCurrentFileName);
+                fileNames.add(sound.soundFileName);
 
                 if (delayFile != null)
                 {

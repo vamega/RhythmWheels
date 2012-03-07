@@ -1,15 +1,6 @@
 package rhythmwheels.soundcategories;
 
-import rhythmwheels.AcousticBass;
-import rhythmwheels.AcousticSnare;
-import rhythmwheels.Crash;
-import rhythmwheels.ElectricSnare;
-import rhythmwheels.HiHatO;
-import rhythmwheels.LowFloorTom;
-import rhythmwheels.OpenHighConga;
-import rhythmwheels.Rest;
 import rhythmwheels.Sound;
-import rhythmwheels.Splash;
 
 public class Rock extends SoundCategory
 {
@@ -20,25 +11,22 @@ public class Rock extends SoundCategory
         numSounds = 9;
         sounds = new Sound[numSounds];
 
-        sounds[0] = new Rest();
-        sounds[1] = new AcousticBass();
-        sounds[2] = new AcousticSnare();
-        sounds[3] = new ElectricSnare();
-        sounds[4] = new LowFloorTom();
-        sounds[5] = new OpenHighConga();
-        sounds[6] = new HiHatO();
-        sounds[7] = new Splash();
-        sounds[8] = new Crash();
+        sounds[0] = Sound.installedSounds.get("rest");
+        sounds[1] = Sound.installedSounds.get("acousticbass");
+        sounds[2] = Sound.installedSounds.get("acousticsnare");
+        sounds[3] = Sound.installedSounds.get("electricsnare");
+        sounds[4] = Sound.installedSounds.get("lowfloortom");
+        sounds[5] = Sound.installedSounds.get("openhighconga");
+        sounds[6] = Sound.installedSounds.get("hihato");
+        sounds[7] = Sound.installedSounds.get("splash");
+        sounds[8] = Sound.installedSounds.get("crash");
 
         names = new String[numSounds];
-        names[0] = "Rest";
-        names[1] = "Acoustic Bass";
-        names[2] = "Acoustic Snare";
-        names[3] = "Electric Snare";
-        names[4] = "Low Tom";
-        names[5] = "Open High Conga";
-        names[6] = "Hi Hat-O";
-        names[7] = "Splash";
-        names[8] = "Crash";
+        
+        for (int i = 0; i < sounds.length; i++)
+        {
+            names[i] = sounds[i].displayName;
+            
+        }
     }
 }

@@ -1,52 +1,85 @@
 package rhythmwheels;
 
 import java.applet.AudioClip;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.geom.Line2D;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  * 
  * @author Varun Madiath (vamega@gmail.com)
  */
-public abstract class Sound implements Cloneable, Serializable
+public class Sound implements Cloneable, Serializable
 {
 
     protected final static BasicStroke mediumStroke = new BasicStroke(2.0f);
     protected static Color SOUND_COLOR = Color.cyan;
     protected Color backgroundColor = Color.black;
     protected static int SOUND_LENGTH = 250; // milliseconds
-    public String strCurrentFileName;       // such as clap1
+    public String soundFileName;       // such as sounds/clap1.au
+    public String imageFileName;       // such as images/clap.png
     protected AudioClip audioClip;          // such as clap
     public String strFileBaseName;
+    public String displayName;
+    
+    public static HashMap<String, Sound> installedSounds = new HashMap<String, Sound>();
+    
+    public Image soundGraphic;
     
     protected static final int WIDTH = 50;
     protected static final int HEIGHT = 50;
     
-    // Max number of volumes for each sound
-    public static final int MAX_VOLUME = 3;
+    // Number of volumes this sound has
+    public int maxVolume;
     // 1 is default - softest
     protected int volumeLevel = 1;
     
+    // This point is used to determin the current location of the sound and has something to do
+    // With it's rendering in the glassPane. I'm not really sure what, but will update this when I
+    // Figure it out.
     protected Point p = new Point(0, 0);  // the top left point before rotation
     protected Point cp = new Point(0, 0); // Center point after rotation
     public int MAX_SOUND_SIZE = 100000;
     public static String SOUND_DIR = "sounds/";
-    public static String EXTENSION = ".au";
+    public static String IMAGE_DIR = "images/";
+    public static final String SOUND_EXTENSION = ".au";
+    public static final String IMAGE_EXTENSION = ".png";
     public static double scaleFactor = 1.0; // For low resolution screens
 
     public Sound(String fileName)
     {
+        this(fileName, null, 3);
+    }
+    
+    public Sound(String fileName, String displayName)
+    {
+        this(fileName, displayName, 3);
+    }
+    
+    public Sound(String fileName, String displayName, int maxVolume)
+    {
         strFileBaseName = fileName;
-        strCurrentFileName = SOUND_DIR + strFileBaseName + volumeLevel + EXTENSION;
+        soundFileName = SOUND_DIR + strFileBaseName + volumeLevel + SOUND_EXTENSION;
+        imageFileName = IMAGE_DIR + strFileBaseName + IMAGE_EXTENSION;
+        this.displayName = displayName;
+        this.maxVolume = maxVolume;
+        
         audioClip = getAudioClip();
+        try
+        {
+            soundGraphic = ImageIO.read(new File(imageFileName));
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(Sound.class.getName()).log(Level.SEVERE, imageFileName, ex);
+        }
 
     }
 
@@ -58,7 +91,7 @@ public abstract class Sound implements Cloneable, Serializable
     {
         AudioClip ac = null;
         URL u;
-        ac = java.applet.Applet.newAudioClip(RhythmWheel.class.getResource(strCurrentFileName));
+        ac = java.applet.Applet.newAudioClip(RhythmWheel.class.getResource(soundFileName));
         return ac;
     }
 
@@ -83,10 +116,10 @@ public abstract class Sound implements Cloneable, Serializable
      */
     public boolean setVolume(int volume)
     {
-        if (1 <= volume && volume <= MAX_VOLUME)
+        if (1 <= volume && volume <= maxVolume)
         {
             volumeLevel = volume;
-            strCurrentFileName = SOUND_DIR + strFileBaseName + volumeLevel + EXTENSION;
+            soundFileName = SOUND_DIR + strFileBaseName + volumeLevel + SOUND_EXTENSION;
             audioClip = getAudioClip();
 
             // Change the background color
@@ -225,7 +258,7 @@ public abstract class Sound implements Cloneable, Serializable
         g2.draw(top);
         g2.draw(left);
         g2.draw(right);
-        paintMe(g2);
+        paintSound(g2);
         g2.scale(1.0 / scaleFactor, 1.0 / scaleFactor);
 
     }
@@ -237,5 +270,12 @@ public abstract class Sound implements Cloneable, Serializable
      */
     public void paintMe(Graphics g)
     {
+    }
+    
+    public void paintSound(Graphics g)
+    {
+        g.translate(p.x, p.y);
+        g.drawImage(soundGraphic, 16, 8, null);
+        g.translate(-p.x, -p.y);
     }
 }

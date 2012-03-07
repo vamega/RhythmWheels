@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sounds>
+    <sound>
+        <name>hihat</name>
+        <displayName>Hi Hat</displayName>
+    </sound>
+    <sound>
+        <name>heel</name>
+        <displayName>Heel</displayName>
+    </sound>
+    <sound>
+        <name>electricsnare</name>
+        <displayName>Electric Snare</displayName>
+    </sound>
+    <sound>
+        <name>lowfloortom</name>
+        <displayName>Low Floor Tom</displayName>
+    </sound>
+    <sound>
+        <name>hup</name>
+        <displayName>Hup</displayName>
+    </sound>
+    <sound>
+        <name>hihato</name>
+        <displayName>Hi Hat-O</displayName>
+    </sound>
+    <sound>
+        <name>bassdrum</name>
+        <displayName>Bass Drum</displayName>
+    </sound>
+    <sound>
+        <name>acousticsnare</name>
+        <displayName>Acoustic Snare</displayName>
+    </sound>
+    <sound>
+        <name>acousticbass</name>
+        <displayName>Acoustic Bass</displayName>
+    </sound>
+    <sound>
+        <name>crash</name>
+        <displayName>Crash</displayName>
+    </sound>
+    <sound>
+        <name>clave</name>
+        <displayName>Clave</displayName>
+    </sound>
+    <sound>
+        <name>clap</name>
+        <displayName>Clap</displayName>
+    </sound>
+    <sound>
+        <name>maracas</name>
+        <displayName>Maracas</displayName>
+    </sound>
+    <sound>
+        <name>splash</name>
+        <displayName>Spash</displayName>
+    </sound>
+    <sound>
+        <name>slap</name>
+        <displayName>Slap</displayName>
+    </sound>
+    <sound>
+        <name>scratch3</name>
+        <displayName>Scratch 3</displayName>
+    </sound>
+    <sound>
+        <name>scratch2</name>
+        <displayName>Scratch 2</displayName>
+    </sound>    
+    <sound>
+        <name>scratch1</name>
+        <displayName>Scratch 1</displayName>
+    </sound>
+    <sound>
+        <name>tube</name>
+        <displayName>Tube</displayName>
+    </sound>
+    <sound>
+        <name>tip</name>
+        <displayName>Tip</displayName>
+    </sound>
+    <sound>
+        <name>tamborine</name>
+        <displayName>Tamborine</displayName>
+    </sound>
+    <sound>
+        <name>open</name>
+        <displayName>Open</displayName>
+    </sound>
+    <sound>
+        <name>neck</name>
+        <displayName>Neck</displayName>
+    </sound>
+    <sound>
+        <name>mouth</name>
+        <displayName>Mouth</displayName>
+    </sound>
+    <sound>
+        <name>rest</name>
+        <displayName>Rest</displayName>
+        <maxVolume>1</maxVolume>
+    </sound>
+    <sound>
+        <name>openhighconga</name>
+        <displayName>Open High Conga</displayName>
+    </sound>
+</sounds>
