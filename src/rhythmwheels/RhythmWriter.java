@@ -54,7 +54,7 @@ public class RhythmWriter
             for (int j = 0; j < soundObjects.size(); j++)
             {
                 Sound currentSound = (Sound) soundObjects.get(j);
-                String name = currentSound.getClass().getCanonicalName();
+                String name = currentSound.strFileBaseName;
 
                 Element soundElement = new Element(SOUND_ELEMENT);
                 soundElement.setText(name);
@@ -111,9 +111,7 @@ public class RhythmWriter
             for (Element soundElement : soundElements)
             {
                 String currentSound = soundElement.getText();
-                //Use reflection to get this working.
-                Class soundClass = Class.forName(currentSound);
-                Sound reflectedSound = (Sound) soundClass.newInstance();
+                Sound reflectedSound = (Sound) Sound.installedSounds.get(currentSound).clone();
 
                 int soundVolume;
                 try

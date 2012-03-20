@@ -1,24 +1,17 @@
 package rhythmwheels;
 
-import rhythmwheels.soundcategories.SoundCategory;
-import rhythmwheels.soundcategories.HipHop;
-import rhythmwheels.soundcategories.Rock;
-import rhythmwheels.soundcategories.LatinoCaribbean;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import rhythmwheels.soundcategories.HipHop;
+import rhythmwheels.soundcategories.LatinoCaribbean;
+import rhythmwheels.soundcategories.Rock;
+import rhythmwheels.soundcategories.SoundCategory;
 
 /*
  * Varun Madiath comments

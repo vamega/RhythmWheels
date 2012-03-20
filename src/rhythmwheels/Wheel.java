@@ -1,11 +1,6 @@
 package rhythmwheels;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Polygon;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
@@ -50,7 +45,8 @@ public class Wheel extends JPanel implements MouseListener
             setPreferredSize(new Dimension(250, 300));
         }
         sounds = new ArrayList<Sound>();
-        Rest r = new Rest();
+        //TODO: Check if this needs to be cloned.
+        Sound r = (Sound) Sound.installedSounds.get("rest").clone();
         sounds.add(r);
     }
 
@@ -129,7 +125,7 @@ public class Wheel extends JPanel implements MouseListener
         for (int i = 0; i < sounds.size(); i++)
         {
             Sound s = sounds.get(i);
-            if (!(s instanceof Rest))
+            if (!(s.getStrFileBaseName().equals("rest")))
             {
                 return false;
             }
@@ -252,7 +248,7 @@ public class Wheel extends JPanel implements MouseListener
         {
             for (int j = oldNum; j < numSounds; j++)
             {
-                sounds.add(new Rest());
+                sounds.add((Sound) Sound.installedSounds.get("rest").clone());
             }
         }
         else
