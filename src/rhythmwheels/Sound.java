@@ -53,17 +53,17 @@ public class Sound implements Cloneable, Serializable
     public static final String IMAGE_EXTENSION = ".png";
     public static double scaleFactor = 1.0; // For low resolution screens
 
-    public Sound(String fileName)
+    protected Sound(String fileName)
     {
-        this(fileName, null, 3);
+        this(fileName, fileName);
     }
     
-    public Sound(String fileName, String displayName)
+    protected Sound(String fileName, String displayName)
     {
         this(fileName, displayName, 3);
     }
     
-    public Sound(String fileName, String displayName, int maxVolume)
+    protected Sound(String fileName, String displayName, int maxVolume)
     {
         strFileBaseName = fileName;
         soundFileName = SOUND_DIR + strFileBaseName + volumeLevel + SOUND_EXTENSION;
@@ -156,6 +156,7 @@ public class Sound implements Cloneable, Serializable
      * This method need to be implemented, otherwise it doesn't show up when dragging it off the 
      * sound panel onto the wheel.
      */
+    @Override
     public Object clone()
     {
         try
@@ -168,7 +169,7 @@ public class Sound implements Cloneable, Serializable
             return null;
         }
     }
-
+    
     /**
      * Plays the AudioClip associated with this Sound.
      */
@@ -277,5 +278,10 @@ public class Sound implements Cloneable, Serializable
         g.translate(p.x, p.y);
         g.drawImage(soundGraphic, 16, 8, null);
         g.translate(-p.x, -p.y);
+    }
+    
+    public static Sound getNewInstance(String soundName)
+    {
+        return (Sound) installedSounds.get("rest").clone();
     }
 }

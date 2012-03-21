@@ -248,7 +248,7 @@ public class Wheel extends JPanel implements MouseListener
         {
             for (int j = oldNum; j < numSounds; j++)
             {
-                sounds.add((Sound) Sound.installedSounds.get("rest").clone());
+                sounds.add(Sound.getNewInstance("rest"));
             }
         }
         else
