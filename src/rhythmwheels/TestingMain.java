@@ -17,6 +17,7 @@ import javax.swing.*;
 import org.jdom.JDOMException;
 import rhythmwheels.scripting.Events;
 import rhythmwheels.scripting.ScriptManager;
+import rhythmwheels.soundcategories.CategoryGenerator;
 
 /**
  * This class runs the RhythmWheels program as an application.
@@ -123,6 +124,7 @@ public class TestingMain implements ActionListener
         try
         {
             SoundLoader.loadSounds(new File("sounds.xml"));
+            CategoryGenerator.generateCategories(new File("soundcategories.xml"));
         }
         catch (JDOMException ex)
         {

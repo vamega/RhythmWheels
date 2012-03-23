@@ -8,9 +8,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
-import rhythmwheels.soundcategories.HipHop;
-import rhythmwheels.soundcategories.LatinoCaribbean;
-import rhythmwheels.soundcategories.Rock;
 import rhythmwheels.soundcategories.SoundCategory;
 
 /*
@@ -100,10 +97,7 @@ public class RhythmWheel extends JRootPane implements ActionListener
         soundCatLabel = new JLabel("Sound Category: ");
         soundCatLabel.setForeground(FOREGROUND_COLOR);
 
-        categoryBox = new JComboBox(new Object[]
-                {
-                    new LatinoCaribbean(), new HipHop(), new Rock()
-                });
+        categoryBox = new JComboBox(SoundCategory.installeCcategories.toArray());
         categoryBox.setUI(ColorArrowUI.createUI(categoryBox));
         numWheelsBox.setUI(ColorArrowUI.createUI(numWheelsBox));
         
