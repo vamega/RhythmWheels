@@ -79,7 +79,7 @@ public class TopContainer extends JPanel
         JPanel navigationPanel = new JPanel();
         previous = new JButton();
         next = new JButton();
-
+                
         previous.setToolTipText("Previous View");
         previous.setText("Previous");
         previous.addActionListener(new ActionListener()
@@ -101,7 +101,7 @@ public class TopContainer extends JPanel
                 if (currentPageNumber == 1)
                 {
                     ((JButton) e.getSource()).setEnabled(false);
-                }
+                    }
                 next.setEnabled(true);
             }
         });
@@ -131,7 +131,7 @@ public class TopContainer extends JPanel
                 previous.setEnabled(true);
             }
         });
-        navigationPanel.add(next);
+        navigationPanel.add(next);       
         
         setUpButtons();
 
@@ -148,7 +148,7 @@ public class TopContainer extends JPanel
 
     public void setUpButtons()
     {
-        if(numPages == 1)
+        if(numPages <= 1)
         {
             previous.setEnabled(false);
             next.setEnabled(false);
@@ -157,6 +157,12 @@ public class TopContainer extends JPanel
         else if(currentPageNumber == 1)
         {
             previous.setEnabled(false);
+            next.setEnabled(true);
+        }
+        else
+        {
+            previous.setEnabled(true);
+            next.setEnabled(true);
         }
     }
 }

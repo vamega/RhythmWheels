@@ -17,6 +17,7 @@ import javax.swing.*;
 import org.jdom.JDOMException;
 import rhythmwheels.scripting.Events;
 import rhythmwheels.scripting.ScriptManager;
+import rhythmwheels.soundcategories.CategoryGenerator;
 
 /**
  * This class runs the RhythmWheels program as an application.
@@ -123,6 +124,7 @@ public class TestingMain implements ActionListener
         try
         {
             SoundLoader.loadSounds(new File("sounds.xml"));
+            CategoryGenerator.generateCategories(new File("soundcategories.xml"));
         }
         catch (JDOMException ex)
         {
@@ -173,6 +175,7 @@ public class TestingMain implements ActionListener
 
                 ZipFile s;
                 s = new ZipFile(selectedFile);
+                root.numPages = 0;
                 for (Enumeration<ZipEntry> x = (Enumeration<ZipEntry>) s.entries(); x.hasMoreElements();)
                 {
                     ZipEntry z = x.nextElement();
@@ -191,6 +194,7 @@ public class TestingMain implements ActionListener
                 root.htmlContent.read(s.getInputStream(page1), page1);
                 scriptManager.fireEvent(Events.ON_LOAD);
                 root.bundle = s;
+                root.currentPageNumber = 1;
                 root.setUpButtons();
             }
             catch (ZipException ex)
