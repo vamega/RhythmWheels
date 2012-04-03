@@ -4,17 +4,14 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 
 public class Wheel extends JPanel implements MouseListener
 {
 
+    private WheelModel model;
     private int radius; // Radius of the Wheel
-    private volatile int soundsPlayedCounter = 0;
-    private List<Sound> sounds;
-    private double rotationAngle = 0.0;
     private double previousRotationAngle = 0.0;
     double[] scales =
     {
@@ -26,8 +23,9 @@ public class Wheel extends JPanel implements MouseListener
         0, 0, 0, 0, 0, 0, 0, 0, 0, 13.5, 27, 33, 39, 48, 62, 70, 79
     };
 
-    public Wheel()
+    public Wheel(WheelModel model)
     {
+        this.model = model;
         addMouseListener(this);
         if (RhythmWheel.lowRes)
         {
@@ -44,10 +42,6 @@ public class Wheel extends JPanel implements MouseListener
             setMinimumSize(new Dimension(200, 300));
             setPreferredSize(new Dimension(250, 300));
         }
-        sounds = new ArrayList<Sound>();
-        //TODO: Check if this needs to be cloned.
-        Sound r = (Sound) Sound.installedSounds.get("rest").clone();
-        sounds.add(r);
     }
 
     /**
@@ -57,7 +51,7 @@ public class Wheel extends JPanel implements MouseListener
      */
     public int getSoundsPlayedCounter()
     {
-        return soundsPlayedCounter;
+        return model.getPlayedCounter();
     }
 
     /**
@@ -67,7 +61,7 @@ public class Wheel extends JPanel implements MouseListener
      */
     public void setSoundsPlayedCounter(int newValue)
     {
-        soundsPlayedCounter = newValue;
+        model.setPlayedCounter(newValue);
     }
 
     /**
@@ -76,7 +70,7 @@ public class Wheel extends JPanel implements MouseListener
      */
     public double getRotationAngle()
     {
-        return rotationAngle;
+        return model.getRotation();
     }
 
     /*
@@ -103,7 +97,7 @@ public class Wheel extends JPanel implements MouseListener
      */
     public void setRotationAngle(double angle)
     {
-        rotationAngle = angle;
+        model.setRotation(angle);
     }
 
     /**
@@ -113,7 +107,7 @@ public class Wheel extends JPanel implements MouseListener
      */
     public List<Sound> getSounds()
     {
-        return sounds;
+        return model.getWheelSounds();
     }
 
     /**
@@ -122,15 +116,7 @@ public class Wheel extends JPanel implements MouseListener
      */
     public boolean isBlank()
     {
-        for (int i = 0; i < sounds.size(); i++)
-        {
-            Sound s = sounds.get(i);
-            if (!(s.getStrFileBaseName().equals("rest")))
-            {
-                return false;
-            }
-        }
-        return true;
+        return model.isWheelEmpty();
     }
 
     // Sets the center of the points based on the number of sounds.
@@ -143,7 +129,7 @@ public class Wheel extends JPanel implements MouseListener
                             getHeight() / 2);
         Point p = (Point) c.clone();
 
-        int numsounds = sounds.size();
+        int numsounds = model.getWheelCapacity();
         if (numsounds == 1)
         {
             p.y -= Sound.getHeight() / 2 - 3;
@@ -213,7 +199,7 @@ public class Wheel extends JPanel implements MouseListener
         double theta, angle;
         for (int i = 0; i < numsounds; i++)
         {
-            Sound s = sounds.get(i);
+            Sound s = model.getSoundAtPosition(i);
             Point soundCenter = new Point();
             theta = i * -2.0 * Math.PI / numsounds - Math.PI / 2.0;
             soundCenter.x = c.x - (int) (Math.cos(theta) * hyp)
@@ -236,25 +222,7 @@ public class Wheel extends JPanel implements MouseListener
     // Sets the number of sounds.  Adds rests if necessary
     public void setNumSounds(int i)
     {
-        int numSounds = sounds.size();
-        if (numSounds == i)
-        {
-            setPoints();
-            return;
-        }
-        int oldNum = numSounds;
-        numSounds = i;
-        if (oldNum < numSounds)
-        {
-            for (int j = oldNum; j < numSounds; j++)
-            {
-                sounds.add(Sound.getNewInstance("rest"));
-            }
-        }
-        else
-        {
-            sounds.subList(i, sounds.size()).clear();
-        }
+        model.setWheelCapacity(i);
         setPoints();
     }
     boolean first = true;
@@ -278,16 +246,16 @@ public class Wheel extends JPanel implements MouseListener
 
         Point c = new Point(getWidth() / 2, getHeight() / 2);
 
-        int numsounds = sounds.size();
+        int numsounds = model.getWheelCapacity();
         g2.scale(scales[numsounds], scales[numsounds]);
         g2.translate(translators[numsounds], translators[numsounds]);
 
         // Draw the wheel, rotating if necessary
-        g2.rotate(rotationAngle, c.x, c.y);
+        g2.rotate(model.getRotation(), c.x, c.y);
 
         for (int i = 0; i < numsounds; i++)
         {
-            Sound s = sounds.get(i);
+            Sound s = model.getSoundAtPosition(i);
             g2.scale(1 / Sound.scaleFactor, 1 / Sound.scaleFactor);
             //g2.drawOval(s.getCenter().x - 10, s.getCenter().y - 10, 25, 25);
             s.paint(g2);
@@ -295,7 +263,7 @@ public class Wheel extends JPanel implements MouseListener
             g2.rotate(-2.0 * Math.PI / numsounds, c.x, c.y);
         }
         // Draw the bottom triangle and the outer circle (not rotated)
-        g2.rotate(-rotationAngle, c.x, c.y);
+        g2.rotate(-model.getRotation(), c.x, c.y);
         g2.setColor(Color.blue);
         g2.drawOval(c.x - radius, c.y - radius, radius * 2, radius * 2);
         g2.setColor(Color.cyan);
@@ -328,7 +296,7 @@ public class Wheel extends JPanel implements MouseListener
         Point p = new Point(xpts[0], ypts[2] + (int) (15 * 1 / scales[numsounds]));
 
         // Get the bounds of the string to be drawn so that we can center it on the canvas.
-        Rectangle2D stringBounds = getFont().getStringBounds(Integer.toString(soundsPlayedCounter),
+        Rectangle2D stringBounds = getFont().getStringBounds(Integer.toString(model.getPlayedCounter()),
                                                              g2.getFontRenderContext());
         double stringWidth = (stringBounds.getMaxX() + stringBounds.getMinX());
 
@@ -342,7 +310,7 @@ public class Wheel extends JPanel implements MouseListener
          * Draw the string, we must transform p to the original coordinate system 
          * (which we reversed just prior to this).
          */
-        g2.drawString(Integer.toString(soundsPlayedCounter), (float) (p.x * scales[numsounds]),
+        g2.drawString(Integer.toString(model.getPlayedCounter()), (float) (p.x * scales[numsounds]),
                       (float) (p.y * scales[numsounds]));
         // Reverse the scaling, so that the rest of the code draws with the scaled values.
         g2.scale(scales[numsounds], scales[numsounds]);
@@ -373,20 +341,20 @@ public class Wheel extends JPanel implements MouseListener
      */
     public void drop(Sound dropSound, Point mousePt)
     {
-        int soundNum = sounds.size() - 1;
+        int soundNum = model.getWheelCapacity() - 1;
         Point translatedPt = new Point();
         translatedPt.x = (int) (-translators[soundNum]
                                 + mousePt.x / scales[soundNum]);
         translatedPt.y = (int) (-translators[soundNum]
                                 + mousePt.y / scales[soundNum]);
         int minIndex = findClosestSound(translatedPt);
-        Sound minSound = sounds.get(minIndex);
+        Sound minSound = model.getSoundAtPosition(minIndex);
         double mindist = dist(minSound.getCenter(), translatedPt);
 
         // Replace it if we're close enough
         if (mindist < Sound.getHeight() / 2)
         {
-            sounds.set(minIndex, dropSound);
+            model.placeSoundInWheel(dropSound, minIndex);
             setPoints();
             repaint();
         }
@@ -399,7 +367,7 @@ public class Wheel extends JPanel implements MouseListener
     private Point translatePoint(Point p)
     {
         Point p1 = (Point) p.clone();
-        int soundNum = sounds.size() - 1;
+        int soundNum = model.getWheelCapacity() - 1;
         p1.x = (int) (p1.x * scales[soundNum] + translators[soundNum]);
         p1.y = (int) (p1.y * scales[soundNum] + translators[soundNum]);
         return p1;
@@ -412,16 +380,16 @@ public class Wheel extends JPanel implements MouseListener
      */
     private int findClosestSound(Point p)
     {
-        Sound minSound = sounds.get(0);
+        Sound minSound = model.getSoundAtPosition(0);
         double mindist = dist(p, minSound.getCenter());
         double d;
         int minIndex = 0;
-        int numsounds = sounds.size();
+        int numsounds = model.getWheelCapacity();
 
         // Find the closest sound
         for (int i = 1; i < numsounds; i++)
         {
-            Sound s = sounds.get(i);
+            Sound s = model.getSoundAtPosition(i);
             d = dist(p, s.getCenter());
             if (d < mindist)
             {
@@ -447,7 +415,7 @@ public class Wheel extends JPanel implements MouseListener
     // Mouse Listener methods
     public void mousePressed(MouseEvent evt)
     {
-        int soundNum = sounds.size() - 1;
+        int soundNum = model.getWheelCapacity() - 1;
         Point mousePt = evt.getPoint();
         Point translatedPt = new Point();
         translatedPt.x = (int) (-translators[soundNum]
@@ -455,7 +423,7 @@ public class Wheel extends JPanel implements MouseListener
         translatedPt.y = (int) (-translators[soundNum]
                                 + mousePt.y / scales[soundNum]);
 
-        Sound closest = sounds.get(findClosestSound(translatedPt));
+        Sound closest = model.getSoundAtPosition(findClosestSound(translatedPt));
         if (dist(closest.getCenter(), translatedPt) < Sound.getHeight() / 2)
         {
             closest.cycleVolume();

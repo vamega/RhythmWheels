@@ -13,7 +13,7 @@ import javax.swing.SpinnerNumberModel;
 public class WheelPanel extends JPanel
 {
 
-    public Wheel wheel = new Wheel();
+    public Wheel wheel = new Wheel(new WheelModel());
     public Color BACKGROUND_COLOR = RhythmWheel.BACKGROUND_COLOR;
     public Color FOREGROUND_COLOR = RhythmWheel.FOREGROUND_COLOR;
     public NumberPanel numPanel = new NumberPanel(wheel);

@@ -15,7 +15,7 @@ import rhythmwheels.scripting.ScriptManager;
 
 public class ControlsPanel extends JPanel implements ActionListener
 {
-
+    
     public static final int MIN_SPEED = -8;
     public static final int MAX_SPEED = 4;
     public static final int DEFAULT_SPEED = 0;
@@ -96,7 +96,7 @@ public class ControlsPanel extends JPanel implements ActionListener
 
             public void actionPerformed(ActionEvent e)
             {
-                int returnVal = fileChooser.showSaveDialog(rhythmWheel);
+                int returnVal = fileChooser.showSaveDialog(TestingMain.getAppFrame());
 
                 if (returnVal == JFileChooser.APPROVE_OPTION)
                 {
@@ -124,12 +124,12 @@ public class ControlsPanel extends JPanel implements ActionListener
                          * This should never happen, as we should be creating the file if it
                          * doesn't exist.
                          */
-                        JOptionPane.showMessageDialog(rhythmWheel, "The file does not exist.",
+                        JOptionPane.showMessageDialog(TestingMain.getAppFrame(), "The file does not exist.",
                                                       "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
                     catch (IOException ex)
                     {
-                        JOptionPane.showMessageDialog(rhythmWheel, "Unable to write to the file.",
+                        JOptionPane.showMessageDialog(TestingMain.getAppFrame(), "Unable to write to the file.",
                                                       "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -160,7 +160,7 @@ public class ControlsPanel extends JPanel implements ActionListener
 
             public void actionPerformed(ActionEvent e)
             {
-                int returnVal = fileChooser.showOpenDialog(rhythmWheel);
+                int returnVal = fileChooser.showOpenDialog(TestingMain.getAppFrame());
 
                 if (returnVal == JFileChooser.APPROVE_OPTION)
                 {
@@ -177,19 +177,19 @@ public class ControlsPanel extends JPanel implements ActionListener
                     catch (JDOMException ex)
                     {
                         //TODO: Find a better way of wording this error message
-                        JOptionPane.showMessageDialog(rhythmWheel,
+                        JOptionPane.showMessageDialog(TestingMain.getAppFrame(),
                                                       "The file is not formatted correctly, or "
                                                       + "does not represent a Rhythm",
                                                       "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
                     catch (IOException ex)
                     {
-                        JOptionPane.showMessageDialog(rhythmWheel, "Unable to read the file.",
+                        JOptionPane.showMessageDialog(TestingMain.getAppFrame(), "Unable to read the file.",
                                                       "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
                     catch (Exception ex)
                     {
-                        JOptionPane.showMessageDialog(rhythmWheel,
+                        JOptionPane.showMessageDialog(TestingMain.getAppFrame(),
                                                       "This file was created by a version of "
                                                       + "RhythmWheels that this version "
                                                       + "cannot read.",

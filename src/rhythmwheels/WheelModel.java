@@ -11,11 +11,12 @@ public class WheelModel
 {
     private List<Sound> wheelSounds;
     private double rotation;
-    private double playedCounter;
+    private volatile int playedCounter;
 
     public WheelModel()
     {
         wheelSounds = new ArrayList<Sound>();
+        wheelSounds.add(Sound.getNewInstance("rest"));
         rotation = 0;
         playedCounter = 0;
     }
@@ -34,12 +35,12 @@ public class WheelModel
 
     // Methods operating on the counter.
     
-    public double getPlayedCounter()
+    public int getPlayedCounter()
     {
         return playedCounter;
     }
 
-    public void setPlayedCounter(double playedCounter)
+    public void setPlayedCounter(int playedCounter)
     {
         this.playedCounter = playedCounter;
     }
@@ -56,14 +57,61 @@ public class WheelModel
 
     // Methods operating on the sounds.
     
-    public void addSoundToWheel(Sound s, int position)
+    /**
+     * Places a sound in the wheel at a particular position. If there is a sound currently at that 
+     * position it is replaced. If the position is larger than the wheels current sized, the wheel
+     * remains unchanged.
+     * 
+     * @param s The Sound to place in the sound wheel. A new copy of this sound is made and added to
+     *          to the wheel, so the Sound passed in is never modified.
+     * @param position The position in the wheel where the sound should be placed. Values that will
+     *        cause the method to return success are in the range
+     *        [0,<code>getWheelCapacity()</code>).
+     * 
+     * @return true if the sound was placed in the wheel. false otherwise.
+     */
+    public boolean placeSoundInWheel(Sound s, int position)
     {
-        
+        if(position < 0 || position > getWheelCapacity())
+        {
+            return false;
+        }
+        else
+        {
+            try
+            {
+                wheelSounds.set(position, (Sound) s.clone());
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            
+            return true;
+        }
+    }
+    
+    public Sound getSoundAtPosition(int position)
+    {
+        return wheelSounds.get(position);
     }
     
     public List<Sound> getWheelSounds()
     {
         return wheelSounds;
+    }
+    
+    public boolean isWheelEmpty()
+    {
+        for (Sound sound : wheelSounds)
+        {
+            if(!sound.getStrFileBaseName().equals("rest"));
+            {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     public int getWheelCapacity()
