@@ -175,6 +175,7 @@ public class TestingMain implements ActionListener
 
                 ZipFile s;
                 s = new ZipFile(selectedFile);
+                root.numPages = 0;
                 for (Enumeration<ZipEntry> x = (Enumeration<ZipEntry>) s.entries(); x.hasMoreElements();)
                 {
                     ZipEntry z = x.nextElement();
@@ -193,6 +194,7 @@ public class TestingMain implements ActionListener
                 root.htmlContent.read(s.getInputStream(page1), page1);
                 scriptManager.fireEvent(Events.ON_LOAD);
                 root.bundle = s;
+                root.currentPageNumber = 1;
                 root.setUpButtons();
             }
             catch (ZipException ex)
