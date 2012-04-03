@@ -61,12 +61,9 @@ public class CategoryGenerator
              * xml and store it into the list of installed sound categories */
             SoundCategory newSC = new SoundCategory(soundF, names, name, 
                     numSounds);            
-            
-           /* debugging code */
-            System.out.println(names.length);
+                       
             
             SoundCategory.installeCcategories.add(newSC);
-        }    
-        System.out.println(SoundCategory.installeCcategories.size());
+        }            
     }
 }
