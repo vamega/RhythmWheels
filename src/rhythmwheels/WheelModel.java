@@ -22,7 +22,6 @@ public class WheelModel
     }
 
     // Methods operating on the wheels rotation.
-    
     public double getRotation()
     {
         return rotation;
@@ -34,7 +33,6 @@ public class WheelModel
     }
 
     // Methods operating on the counter.
-    
     public int getPlayedCounter()
     {
         return playedCounter;
@@ -56,7 +54,6 @@ public class WheelModel
     }
 
     // Methods operating on the sounds.
-    
     /**
      * Places a sound in the wheel at a particular position. If there is a sound currently at that 
      * position it is replaced. If the position is larger than the wheels current sized, the wheel
@@ -70,6 +67,30 @@ public class WheelModel
      * 
      * @return true if the sound was placed in the wheel. false otherwise.
      */
+    public void empty()
+    {
+        for (int i = 0; i < wheelSounds.size(); i++)
+        {
+            wheelSounds.set(i, Sound.getNewInstance("rest"));
+        }
+    }
+    
+    public void randomlyFillWheel()
+    {
+        Sound[] installedSounds = Sound.installedSounds.values().toArray(new Sound[Sound.installedSounds.size()]);
+        
+        for (int i = 0; i < wheelSounds.size(); i++)
+        {
+            int randomNum = random(installedSounds.length-1);
+            wheelSounds.set(i, installedSounds[randomNum]);
+        }
+    }
+    
+    private int random(int limit)
+    {
+        return (int) (Math.random()*(limit+1));
+    }
+    
     public boolean placeSoundInWheel(Sound s, int position)
     {
         if(position < 0 || position > getWheelCapacity())

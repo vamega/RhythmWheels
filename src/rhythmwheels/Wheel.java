@@ -99,6 +99,11 @@ public class Wheel extends JPanel implements MouseListener
     {
         model.setRotation(angle);
     }
+    
+    public WheelModel getWheelModel()
+    {
+        return model;
+    }
 
     /**
      * Returns a list of all the Sounds in the wheel. Modifications to this list will modify the 
